@@ -1,0 +1,22 @@
+{
+  "name": "mugglemuggle",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Y2Nk4/MuggleMuggle.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Y2Nk4/MuggleMuggle/issues"
+  },
+  "homepage": "https://github.com/Y2Nk4/MuggleMuggle#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
