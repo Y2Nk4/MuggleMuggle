@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Y2Nk4/MuggleMuggle#readme",
   "dependencies": {
-    "express": "^4.18.1"
+    "express": "^4.18.1",
+    "mongodb": "^4.10.0"
   }
 }

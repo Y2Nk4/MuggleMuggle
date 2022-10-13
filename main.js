@@ -1,10 +1,9 @@
 const express = require('express')
 const app = express()
 const port = 3000
+const router = require('./router')
 
-app.get('/', (req, res) => {
-    res.send('Hello World!')
-})
+router(app)
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
