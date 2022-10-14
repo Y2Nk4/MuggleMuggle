@@ -3,7 +3,7 @@ module.exports = {
     port: 8080,
 
     db: {
-        url: process.env.DB ? `mongodb://${process.env.DB}` : 'mongodb://root:root@localhost',
+        url: process.env.DB ? `mongodb://${process.env.DB}` : 'mongodb://localhost',
         db: 'cse312-project'
     }
 }
