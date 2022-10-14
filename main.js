@@ -2,9 +2,20 @@ const express = require('express')
 const app = express()
 const port = 3000
 const router = require('./router')
+const mongoInit = require('./db')
+const config = require('./config')
 
-router(app)
+// 使用 async
+;(async () => {
+    let db = mongoInit(config)
+    router(app)
 
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
-})
+    app.use(function (req, res, next) {
+        res.db = db
+        next()
+    });
+
+    app.listen(port, () => {
+        console.log(`Example app listening on port ${port}`)
+    })
+})()
