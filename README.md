@@ -47,6 +47,6 @@ The following is the layout of the project
    即可访问数据库内容
    
 2. 如何返回数据
-   1. Long Store short:
+   1. Long Story Short:
       `res.send('User Info');` or `res.end('User Info');`
    2. 看 [documentation](https://expressjs.com/)
