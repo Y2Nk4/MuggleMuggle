@@ -1,5 +1,6 @@
 module.exports = {
-    home(req, resp) {
-        return resp.send('Hello, World')
+    async home(ctx) {
+        console.log(ctx.service)
+        return ctx.body = 'Hello, World'
     }
 }
