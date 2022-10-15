@@ -1,0 +1,190 @@
+body {
+    background-color: #67BFFF;
+}
+.Name {
+    width: 740px;
+    height: 255px;
+
+    font-family: 'Inter';
+    font-style: italic;
+    font-weight: 800;
+    font-size: 70px;
+    line-height: 85px;
+    text-align: center;
+    text-decoration: none;
+
+    color: #000000;
+
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 75%;
+    transform: translate(-50%, -50%);
+}
+.Name:hover{
+    color: #ffffff;
+}
+.RegisterBox {
+    width: 650px;
+    height: 750px;
+
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 30%;
+    transform: translate(-50%, -50%);
+
+    background: #FF7A00;
+    border-radius: 25px;
+}
+.RegisterText{
+    width: 200px;
+    height: 50px;
+
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 800;
+    font-size: 40px;
+    line-height: 48px;
+    text-align: center;
+
+    color: #F7F7F7;
+
+    margin: 0;
+    position: absolute;
+    top: 8%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.InputBox{
+    width: 520px;
+    height: 575px;
+
+    background: #F7F7F7;
+    border-radius: 25px;
+
+    margin: 0;
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.UsernameText{
+    width: 120px;
+    height: 25px;
+
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 800;
+    font-size: 24px;
+    line-height: 24px;
+    text-align: center;
+
+    color: #000000;
+
+    margin: 0;
+    position: absolute;
+    top: 30%;
+    left: 30%;
+    transform: translate(-50%, -50%);
+}
+.UsernameBox{
+    width: 200px;
+    height: 20px;
+    
+    background: #D9D9D9;
+
+    margin: 0;
+    position: absolute;
+    top: 30%;
+    left: 68%;
+    transform: translate(-50%, -50%);
+}
+.PasswordText{
+    width: 120px;
+    height: 25px;
+
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 800;
+    font-size: 24px;
+    line-height: 24px;
+    text-align: center;
+
+    color: #000000;
+
+    margin: 0;
+    position: absolute;
+    top: 40%;
+    left: 30%;
+    transform: translate(-50%, -50%);
+}
+.PasswordBox{
+    width: 200px;
+    height: 20px;
+    
+    background: #D9D9D9;
+
+    margin: 0;
+    position: absolute;
+    top: 40%;
+    left: 68%;
+    transform: translate(-50%, -50%);
+}
+.EmailText{
+    width: 120px;
+    height: 25px;
+
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 800;
+    font-size: 24px;
+    line-height: 24px;
+    text-align: center;
+
+    color: #000000;
+
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 30%;
+    transform: translate(-50%, -50%);
+}
+.EmailBox{
+    width: 200px;
+    height: 20px;
+    
+    background: #D9D9D9;
+
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 68%;
+    transform: translate(-50%, -50%);
+}
+.ComfirmButton{
+    width: 255px;
+    height: 60px;
+
+    background: #1400FF;
+    border-radius: 25px;
+
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 800;
+    font-size: 20px;
+    line-height: 24px;
+    text-align: center;
+
+    color: #F7F7F7;
+
+    margin: 0;
+    position: absolute;
+    top: 90%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.ComfirmButton:hover{
+    background: #1100cc;
+    cursor: pointer;
+}
