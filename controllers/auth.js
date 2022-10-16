@@ -1,5 +1,6 @@
 let sha256 = require('../utils/sha256')
 let idManage = require('../utils/idManage')
+const matchRules = require('../utils/match')
 
 module.exports = {
     async login(ctx) {
@@ -49,7 +50,7 @@ module.exports = {
             !request.body.hasOwnProperty('password') ||
             !request.body.hasOwnProperty('firstname') ||
             !request.body.hasOwnProperty('lastname') ||
-            !/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(request.body.email)
+            !matchRules.matchEmail(request.body.email)
         ) {
             return ctx.error('Please enter your email, password, firstname and lastname', 400)
         }

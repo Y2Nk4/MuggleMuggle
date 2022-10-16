@@ -12,5 +12,6 @@ router.post('/api/auth/logout', auth.logout)
 router.get('/api/auth/loginStatus', auth.loginStatus)
 
 router.get('/api/user/userInfo', user.userInfo)
+router.post('/api/user/userUpdateInfo', user.userUpdateInfo)
 
 module.exports = router
