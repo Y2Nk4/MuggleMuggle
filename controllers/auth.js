@@ -44,6 +44,7 @@ module.exports = {
 
         if (ctx.session.userLogged) return ctx.error('User has been logged in', 400)
 
+        console.log(ctx.request.body)
         if (!request.body.hasOwnProperty('email') ||
             !request.body.hasOwnProperty('password') ||
             !request.body.hasOwnProperty('firstname') ||
@@ -67,13 +68,19 @@ module.exports = {
 
         let userId = await idManage.assignID(service.db ,'users')
         console.log(userId)
-        let result = await service.db.insertOne({
-
+        let result = await service.db.collection('users').insertOne({
+            id: userId,
+            email: request.body.email,
+            password: storedPass,
+            firstname: request.body.firstname,
+            lastname: request.body.lastname,
         })
+
+        console.log(result)
 
         ctx.session.userLogged = true
         ctx.session.loggedInTime = Date.now()
-        ctx.session.userId = user.id
+        ctx.session.userId = userId
 
         return ctx.success('Sign up Successfully')
     },

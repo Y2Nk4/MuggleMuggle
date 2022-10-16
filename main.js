@@ -1,18 +1,20 @@
 const koa = require('koa')
-const app = new koa()
 const router = require('./router')
 const mongoInit = require('./db')
 const config = require('./config')
-const bodyParser = require('koa-bodyparser')
+const koaBody = require('koa-body')
 const session = require('koa-session')
 const responseHelper = require('./response')
 
 
 ;(async () => {
-    const db = mongoInit(config.db)
+    const db = await mongoInit(config.db)
     console.log(process.env.DB)
 
-    app.use(bodyParser())
+    const app = new koa()
+    app.keys = config.keys
+
+    app.use(koaBody({ multipart: true }))
         .use(session(config.session, app))
         .use(async function (ctx, next) {
             ctx.success = responseHelper.success.bind(ctx)
@@ -24,7 +26,9 @@ const responseHelper = require('./response')
             await next()
         })
         .use(router.routes())
-        .listen(config.port)
+        .listen(config.port, () => {
+            console.log('Listening to', config.port)
+        })
 
-    console.log('Listening to', config.port)
+
 })()

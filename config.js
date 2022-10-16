@@ -7,6 +7,8 @@ module.exports = {
         db: 'cse312-project'
     },
 
+    keys: [ 'dj94yu8dwdj3' ],
+
     session: {
         key: 'koa.sess', /** (string) cookie key (default is koa.sess) */
         /** (number || 'session') maxAge in ms (default is 1 days) */
@@ -19,7 +21,7 @@ module.exports = {
         signed: true, /** (boolean) signed or not (default true) */
         rolling: false, /** (boolean) Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown. (default is false) */
         renew: false, /** (boolean) renew session when session is nearly expired, so we can always keep user logged in. (default is false)*/
-        secure: true, /** (boolean) secure cookie*/
+        secure: false, /** (boolean) secure cookie*/
         sameSite: null, /** (string) session cookie sameSite options (default null, don't set it) */
     }
 }
