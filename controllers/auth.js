@@ -84,4 +84,12 @@ module.exports = {
 
         return ctx.success('Sign up Successfully')
     },
+
+    async logout(ctx) {
+        ctx.session.userLogged = false
+        ctx.session.loggedInTime = null
+        ctx.session.userId = null
+
+        return ctx.success('Logout Successfully')
+    }
 }
