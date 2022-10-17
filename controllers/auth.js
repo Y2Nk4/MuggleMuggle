@@ -48,11 +48,16 @@ module.exports = {
         console.log(ctx.request.body)
         if (!request.body.hasOwnProperty('email') ||
             !request.body.hasOwnProperty('password') ||
+            !request.body.hasOwnProperty('confirmPassword') ||
             !request.body.hasOwnProperty('firstname') ||
             !request.body.hasOwnProperty('lastname') ||
             !matchRules.matchEmail(request.body.email)
         ) {
             return ctx.error('Please enter your email, password, firstname and lastname', 400)
+        }
+
+        if (request.body.confirmPassword !== request.body.password){
+            return ctx.error('Password does not match', 400)
         }
 
         let user = await service.db.collection('users').findOne({
@@ -62,7 +67,7 @@ module.exports = {
         if (user) return ctx.error('Email has been used', 400)
         user = null // release user
 
-        // check password
+        // generate salted password
         let salt = sha256.randomString(8)
         let saltedPass = sha256.sha256(salt + request.body.password)
         let storedPass = salt + ':' + saltedPass

@@ -1,4 +1,5 @@
 let matchRules = require('../utils/match')
+let sha256 = require('../utils/sha256')
 
 const userController = {
     async userInfo(ctx) {
@@ -47,6 +48,41 @@ const userController = {
         user = await userController._getLoggedInUser(ctx)
 
         return ctx.success(userController._formatUserJSON(user))
+    },
+
+    async changePassword(ctx) {
+        let user = await userController._getLoggedInUser(ctx)
+        if (!user) return
+
+        const { service, request } = ctx
+
+        if (!request.body.hasOwnProperty('password') ||
+            !request.body.hasOwnProperty('confirmPassword')) {
+            return ctx.error('Please enter a password')
+        }
+
+        if (request.body.password !== request.body.confirmPassword) {
+            return ctx.error('Password does not match', 400)
+        }
+
+        // generate salted password
+        let salt = sha256.randomString(8)
+        let saltedPass = sha256.sha256(salt + request.body.password)
+        let storedPass = salt + ':' + saltedPass
+
+        let result = await service.db.collection('users').updateOne({
+            _id: user._id,
+        }, {
+            $set: {
+                password: storedPass
+            }
+        })
+
+        if (result.modifiedCount > 0) {
+            return ctx.success('Your Password has been successfully updated')
+        } else {
+            return ctx.error('Failed to update your password', 500)
+        }
     },
 
     async _getLoggedInUser(ctx) {
