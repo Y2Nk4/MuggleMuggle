@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "y2nk4-local-run": "export DB=\"root:root@localhost\"; node main.js "
   },
   "repository": {
     "type": "git",
