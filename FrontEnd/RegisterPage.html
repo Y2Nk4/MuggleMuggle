@@ -11,23 +11,22 @@
         <div class="RegisterBox">
             <h1 class="RegisterText">Register</h1>
             <div class="InputBox"> 
-                <!-- need javascript for register-->
-                <form id="UserInform" action="RegisterUser()"> 
+                <form id="UserInform" onsubmit="return RegisterUser(this)"> 
                     <!-- First Name-->
-                    <label class="FirstNameText" for="FirstName">First Name: </label>
-                    <input class="FirstNameBox" type="text" id="FirstName" name="FirstName" placeholder="Enter First Name"><br><br>
+                    <label class="FirstNameText" for="firstname">First Name: </label>
+                    <input class="FirstNameBox" type="text" id="firstname" name="firstname" placeholder="Enter First Name"><br><br>
                     <!-- Last Name -->
-                    <label class="LastNameText" for="LastName">Last Name: </label>
-                    <input class="LastNameBox" type="text" id="LastName" name="LastName" placeholder="Enter Last Name"><br><br>
+                    <label class="LastNameText" for="lastname">Last Name: </label>
+                    <input class="LastNameBox" type="text" id="lastname" name="lastname" placeholder="Enter Last Name"><br><br>
                     <!-- Password-->
-                    <label class="PasswordText" for="Password">Password: </label>
-                    <input class="PasswordBox" type="password" id="Password" name="Password" placeholder="Enter Password"><br><br>
+                    <label class="PasswordText" for="password">Password: </label>
+                    <input class="PasswordBox" type="password" id="password" name="password" placeholder="Enter Password"><br><br>
                     <!-- Confirm Password -->
-                    <label class="ConfirmPasswordText" for="ConfirmPassword">Confirm Password: </label>
-                    <input class="ConfirmPasswordBox" type="password" id="ConfirmPassword" name="ConfirmPassword" placeholder="Enter Confirm Password"><br><br>
+                    <label class="ConfirmPasswordText" for="confirmPassword">Confirm Password: </label>
+                    <input class="ConfirmPasswordBox" type="password" id="confirmPassword" name="confirmPassword" placeholder="Enter Confirm Password"><br><br>
                     <!-- Email -->
-                    <label class="EmailText" for="Email">Email: </label>
-                    <input class="EmailBox" type="text" id="Email" name="Email" placeholder="Enter Email"><br><br>
+                    <label class="EmailText" for="email">Email: </label>
+                    <input class="EmailBox" type="text" id="email" name="email" placeholder="Enter Email"><br><br>
                     <!-- Submit Button -->
                     <input class="SubmitButton" type="submit" value="Submit">
                   </form>

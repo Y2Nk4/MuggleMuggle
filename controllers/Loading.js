@@ -21,6 +21,11 @@ module.exports = {
         ctx.type = 'css';
         ctx.body = fs.createReadStream('./FrontEnd/LoginPage.css');
     },
+    async LoginJS(ctx) {
+        console.log(ctx.service)
+        ctx.type = 'javascript';
+        ctx.body = fs.createReadStream('./FrontEndScript/Login.js');
+    },
     async Register(ctx) {
         console.log(ctx.service)
         ctx.type = 'html';
@@ -33,8 +38,8 @@ module.exports = {
     },
     async RegisterJS(ctx){
         console.log(ctx.service)
-        ctx.type('javascript');
-        ctx.body = fs.createReadStream('../FrontEndScript/Register.js')
+        ctx.type = 'javascript';
+        ctx.body = fs.createReadStream('./FrontEndScript/Register.js');
     },
     async Home(ctx) {
         console.log(ctx.service)
@@ -45,5 +50,10 @@ module.exports = {
         console.log(ctx.service)
         ctx.type = 'css';
         ctx.body = fs.createReadStream('./FrontEnd/HomePage.css');
+    },
+    async HomeJS(ctx) {
+        console.log(ctx.service)
+        ctx.type = 'javascript';
+        ctx.body = fs.createReadStream('./FrontEndScript/Home.ks');
     }
 }

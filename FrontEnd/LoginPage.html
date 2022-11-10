@@ -6,19 +6,20 @@
         <link rel="stylesheet" type="text/css" href="LoginPage.css"/>
         <title>MuggleMuggle: Login</title>
     </head>
+    <script src="Login.js"></script>
     <body>
         <div class="LoginBox">
             <h1 class="AccountText">Account</h1>
-            <!-- need javascript for register-->
-            <form action=""> 
-                <label class="EmailText" for="Email">Email: </label>
-                <input class="EmailBox" type="text" id="Email" name="Email" placeholder="Enter Email"><br><br>
-                <label class="PasswordText" for="Password">Password: </label>
-                <input class="PasswordBox" type="password" id="Password" name="Password" placeholder="Enter Password"><br><br>
+            <!--javascript for register-->
+            <form onsubmit="return LoginUser(this)"> 
+                <label class="EmailText" for="email">Email: </label>
+                <input class="EmailBox" type="text" id="email" name="email" placeholder="Enter Email"><br><br>
+                <label class="PasswordText" for="password">Password: </label>
+                <input class="PasswordBox" type="password" id="Password" name="password" placeholder="Enter Password"><br><br>
                 <input class="LoginButton" type="submit" value="Login">
             </form>
         </div>
-        <!-- need link to go back to landing page-->
+        <!-- link to go back to landing page-->
         <a href="http://localhost:8080/" class="Name">
             MuggleMuggle<br>
             Auction House
