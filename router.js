@@ -16,6 +16,7 @@ router.get('/LoginPage.css', Loading.LoginCSS)
 // Get RegisterPage html and css
 router.get('/Register', Loading.Register)
 router.get('/RegisterPage.css', Loading.RegisterCSS)
+router.get('/Register.js', Loading.RegisterJS)
 // Get HomePage html and css
 router.get('/Home', Loading.Login)
 router.get('/HomePage.css', Loading.LoginCSS)

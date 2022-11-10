@@ -6,12 +6,13 @@
         <link rel="stylesheet" type="text/css" href="RegisterPage.css"/>
         <title>MuggleMuggle: Register</title>
     </head>
+    <script src="Register.js"></script>
     <body>
         <div class="RegisterBox">
             <h1 class="RegisterText">Register</h1>
             <div class="InputBox"> 
                 <!-- need javascript for register-->
-                <form id="UserInform" action="/FrontEndScript/Register.js"> 
+                <form id="UserInform" action="RegisterUser()"> 
                     <!-- First Name-->
                     <label class="FirstNameText" for="FirstName">First Name: </label>
                     <input class="FirstNameBox" type="text" id="FirstName" name="FirstName" placeholder="Enter First Name"><br><br>
@@ -32,7 +33,7 @@
                   </form>
             </div>
         </div>
-        <!-- need link to go back to landing page-->
+        <!-- link to go back to landing page-->
         <a href="http://localhost:8080/" class="Name">
             MuggleMuggle<br>
             Auction House

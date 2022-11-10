@@ -31,6 +31,11 @@ module.exports = {
         ctx.type = 'css';
         ctx.body = fs.createReadStream('./FrontEnd/RegisterPage.css');
     },
+    async RegisterJS(ctx){
+        console.log(ctx.service)
+        ctx.type('javascript');
+        ctx.body = fs.createReadStream('../FrontEndScript/Register.js')
+    },
     async Home(ctx) {
         console.log(ctx.service)
         ctx.type = 'html';

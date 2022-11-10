@@ -1,5 +1,3 @@
-RegisterUser()
-
 function RegisterUser(){
-    
+    print("register")
 }
