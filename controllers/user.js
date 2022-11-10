@@ -3,7 +3,7 @@ let sha256 = require('../utils/sha256')
 
 const userController = {
     async userInfo(ctx) {
-        let user = await userController._getLoggedInUser(ctx)
+        let user = await ctx.service.getLoggedInUser()
         if (!user) return
 
         return ctx.success(userController._formatUserJSON(user))
@@ -12,7 +12,7 @@ const userController = {
     async userUpdateInfo(ctx) {
         let { request, service } = ctx
 
-        let user = await userController._getLoggedInUser(ctx)
+        let user = await ctx.service.getLoggedInUser()
         if (!user) return
 
         if (
@@ -45,13 +45,13 @@ const userController = {
             $set: updateForm
         })
 
-        user = await userController._getLoggedInUser(ctx)
+        user = await ctx.service.getLoggedInUser()
 
         return ctx.success(userController._formatUserJSON(user))
     },
 
     async changePassword(ctx) {
-        let user = await userController._getLoggedInUser(ctx)
+        let user = await ctx.service.getLoggedInUser()
         if (!user) return
 
         const { service, request } = ctx
@@ -83,21 +83,6 @@ const userController = {
         } else {
             return ctx.error('Failed to update your password', 500)
         }
-    },
-
-    async _getLoggedInUser(ctx) {
-        let { session, service } = ctx
-
-        if (!session.userLogged) {
-            ctx.error('You have not logged in yet', 403)
-            return null
-        }
-
-        let user = await service.db.collection('users').findOne({
-            id: session.userId
-        })
-
-        return user
     },
 
     _formatUserJSON(user) {

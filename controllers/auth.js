@@ -19,6 +19,7 @@ module.exports = {
         if (!user) return ctx.error('Email and password does not match', 400)
 
         // check password
+        //salt:hash
         let saltAndPass = user.password.split(':')
 
         if (!sha256.sha256(saltAndPass[0] + request.body.password) === saltAndPass[1]) {

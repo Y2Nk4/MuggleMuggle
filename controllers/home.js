@@ -4,6 +4,6 @@ module.exports = {
     async home(ctx) {
         console.log(ctx.service)
         ctx.type = 'html';
-        ctx.body = fs.createReadStream('./FrontEnd/HomePage.html');
+        ctx.body = fs.createReadStream('./static/HomePage.html');
     }
 }
