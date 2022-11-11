@@ -33,14 +33,15 @@ The following is the layout of the project
 ├── package.json
 └── router.js
 ```
-#### 从哪开始
+#### How to Start
 
-1. 业务逻辑需要写在 `controllers` 的 `controller` 内，
-并按功能分开放在不同的文件内，譬如 登录/注册 相关的功能写在
-`controllers/auth.js` 内
+1. Web Logics code should be put in the `controllers` directory,
+and separate the codes in different files by their functionality,
+for example login/register related code should be put in
+`controllers/auth.js`
 
 #### Postman WorkSpace
-   1. 加入 WorkSpace: [Invite Link](https://app.getpostman.com/join-team?invite_code=db6ceb1e56a8c715e1d6eed1a32f5733&target_code=30a67f6c92f514b83baf3d3180c20470)
+   1. Join WorkSpace: [Invite Link](https://app.getpostman.com/join-team?invite_code=db6ceb1e56a8c715e1d6eed1a32f5733&target_code=30a67f6c92f514b83baf3d3180c20470)
 
 #### Finished API
 - Auth
@@ -53,13 +54,14 @@ The following is the layout of the project
   3. [POST] Update Password: /api/user/changePassword [password, confirmPassword]
 
 #### Q&A
-1. 如何使用 MongoDB
-   1. DB 已经在 Express 启动的时候，由中间件注入到 `response`
-   对象中(`response.db`)
-   2. 在写 `controller` 中的业务逻辑中时，只需要调用 `resp.db`
-   即可访问数据库内容
+1. How to use MongoDB
+   1. DB has been add to the Koa `context` object (`context.service.db`)
+      during startup by middleware.
+   2. When you write controller logics in `controllers`，you can access 
+   the db by access object `ctx.service.db`
    
-2. 如何返回数据
+   
+2. How to return a HTTP response
    1. Long Story Short:
       `res.send('User Info');` or `res.end('User Info');`
-   2. 看 [documentation](https://expressjs.com/)
+   2. Or checkout [documentation](https://expressjs.com/)
