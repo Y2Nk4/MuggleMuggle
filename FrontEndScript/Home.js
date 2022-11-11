@@ -1,6 +1,11 @@
-function LogoutUser(){
+function LogoutUser(e){
+    e.preventDefault();
+
     const xhttp = new XMLHttpRequest();
+
     xhttp.open("POST", "http://localhost:8080/api/auth/logout");
+    xhttp.send()
+
 }
 function ShowOrHide(){
     let a = document.getElementById("Auction");

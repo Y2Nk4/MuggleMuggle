@@ -6,18 +6,17 @@
         <link rel="stylesheet" type="text/css" href="LoginPage.css"/>
         <title>MuggleMuggle: Login</title>
     </head>
-    <script src="Login.js"></script>
     <body>
         <div class="LoginBox">
             <h1 class="AccountText">Account</h1>
             <!--javascript for register-->
-            <form onsubmit="return LoginUser(this)"> 
+            <form id="login-form">
                 <label class="EmailText" for="email">Email: </label>
                 <input class="EmailBox" type="text" id="email" name="email" placeholder="Enter Email"><br><br>
                 <label class="PasswordText" for="password">Password: </label>
                 <input class="PasswordBox" type="password" id="Password" name="password" placeholder="Enter Password"><br><br>
-                <input class="LoginButton" type="submit" value="Login">
             </form>
+            <button class="LoginButton" onclick="LoginUser()">Login</button>
         </div>
         <!-- link to go back to landing page-->
         <a href="http://localhost:8080/" class="Name">
@@ -25,4 +24,6 @@
             Auction House
         </a>
     </body>
+
+    <script src="Login.js"></script>
 </html>
