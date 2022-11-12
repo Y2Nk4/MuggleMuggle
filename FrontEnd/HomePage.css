@@ -35,6 +35,7 @@ body {
     background: rgb(197, 195, 195);
 }
 .button{
+    display: none;
     height: 100px;
     width: 100px;
 

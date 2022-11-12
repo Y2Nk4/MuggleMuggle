@@ -69,14 +69,45 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
 }
-.UsernameText{
-    width: 120px;
+.FirstNameText{
+    width: 200px;
     height: 25px;
 
     font-family: 'Inter';
     font-style: normal;
     font-weight: 800;
-    font-size: 24px;
+    font-size: 20px;
+    line-height: 24px;
+    text-align: center;
+
+    color: #000000;
+
+    margin: 0;
+    position: absolute;
+    top: 20%;
+    left: 30%;
+    transform: translate(-50%, -50%);
+}
+.FirstNameBox{
+    width: 200px;
+    height: 20px;
+    
+    background: #D9D9D9;
+
+    margin: 0;
+    position: absolute;
+    top: 20%;
+    left: 68%;
+    transform: translate(-50%, -50%);
+}
+.LastNameText{
+    width: 200px;
+    height: 25px;
+
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 800;
+    font-size: 20px;
     line-height: 24px;
     text-align: center;
 
@@ -88,7 +119,7 @@ body {
     left: 30%;
     transform: translate(-50%, -50%);
 }
-.UsernameBox{
+.LastNameBox{
     width: 200px;
     height: 20px;
     
@@ -107,7 +138,7 @@ body {
     font-family: 'Inter';
     font-style: normal;
     font-weight: 800;
-    font-size: 24px;
+    font-size: 20px;
     line-height: 24px;
     text-align: center;
 
@@ -131,14 +162,14 @@ body {
     left: 68%;
     transform: translate(-50%, -50%);
 }
-.EmailText{
-    width: 120px;
+.ConfirmPasswordText{
+    width: 200px;
     height: 25px;
 
     font-family: 'Inter';
     font-style: normal;
     font-weight: 800;
-    font-size: 24px;
+    font-size: 20px;
     line-height: 24px;
     text-align: center;
 
@@ -147,10 +178,10 @@ body {
     margin: 0;
     position: absolute;
     top: 50%;
-    left: 30%;
+    left: 28%;
     transform: translate(-50%, -50%);
 }
-.EmailBox{
+.ConfirmPasswordBox{
     width: 200px;
     height: 20px;
     
@@ -162,7 +193,38 @@ body {
     left: 68%;
     transform: translate(-50%, -50%);
 }
-.ComfirmButton{
+.EmailText{
+    width: 120px;
+    height: 25px;
+
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 800;
+    font-size: 20px;
+    line-height: 24px;
+    text-align: center;
+
+    color: #000000;
+
+    margin: 0;
+    position: absolute;
+    top: 60%;
+    left: 30%;
+    transform: translate(-50%, -50%);
+}
+.EmailBox{
+    width: 200px;
+    height: 20px;
+    
+    background: #D9D9D9;
+
+    margin: 0;
+    position: absolute;
+    top: 60%;
+    left: 68%;
+    transform: translate(-50%, -50%);
+}
+.SubmitButton{
     width: 255px;
     height: 60px;
 
@@ -184,7 +246,7 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
 }
-.ComfirmButton:hover{
+.SubmitButton:hover{
     background: #1100cc;
     cursor: pointer;
 }
