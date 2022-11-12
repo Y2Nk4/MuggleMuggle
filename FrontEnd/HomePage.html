@@ -6,7 +6,6 @@
         <link rel="stylesheet" type="text/css" href="HomePage.css"/>
         <title>MuggleMuggle: Home</title>
     </head>
-    <script src="Home.js"></script>
     <body>
         <div class="Buttons">
             <button class="menu" onclick="ShowOrHide()">
@@ -24,7 +23,7 @@
                 Profile
                 <i class='fas fa-user-circle'></i>
             </button>
-            <button id="Logout" class="button">
+            <button id="Logout" class="button" onclick="LogoutUser()">
                 Logout
                 <i class="fa fa-sign-out"></i>
             </button>
@@ -34,4 +33,5 @@
             </button>
         </div>
     </body>
+    <script src="Home.js"></script>
 </html>

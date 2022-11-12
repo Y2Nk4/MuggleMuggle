@@ -54,6 +54,6 @@ module.exports = {
     async HomeJS(ctx) {
         console.log(ctx.service)
         ctx.type = 'javascript';
-        ctx.body = fs.createReadStream('./FrontEndScript/Home.ks');
+        ctx.body = fs.createReadStream('./FrontEndScript/Home.js');
     }
 }
