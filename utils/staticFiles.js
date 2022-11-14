@@ -7,6 +7,9 @@ module.exports = (root) => {
     return async (ctx, next) => {
         await next()
         if (ctx.method === 'GET' && !ctx.body && ctx.status === 404) {
+            ctx.url = ctx.url.split(/[?#]/)[0]
+            if(ctx.url === '/') ctx.url = '/LandingPage.html'
+
             let filePath = path.join(root, pathTools.normalizePath(ctx.url))
 
             if(fs.existsSync(filePath) && !fs.lstatSync(filePath).isDirectory()) {

@@ -7,21 +7,6 @@ const user = require('./controllers/user')
 const listing = require('./controllers/listing')
 
 const router = new Router();
-// Change starting page of the website is the LandingPage
-router.get('/', Loading.Landing)
-router.get('/LandingPage.css', Loading.LandingCSS)
-// Get LoginPage html and css
-router.get('/Login', Loading.Login)
-router.get('/LoginPage.css', Loading.LoginCSS)
-router.get('/Login.js', Loading.LoginJS)
-// Get RegisterPage html and css
-router.get('/Register', Loading.Register)
-router.get('/RegisterPage.css', Loading.RegisterCSS)
-router.get('/Register.js', Loading.RegisterJS)
-// Get HomePage html and css
-router.get('/Home', Loading.Home)
-router.get('/HomePage.css', Loading.HomeCSS)
-router.get('/Home.js', Loading.HomeJS)
 //
 router.post('/api/auth/login', auth.login)
 router.post('/api/auth/signup', auth.signup)
