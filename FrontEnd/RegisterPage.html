@@ -10,22 +10,32 @@
         <div class="RegisterBox">
             <h1 class="RegisterText">Register</h1>
             <div class="InputBox"> 
-                <!-- need javascript for register-->
-                <form action=""> 
-                    <label class="UsernameText" for="Username">Username: </label>
-                    <input class="UsernameBox" type="text" id="Username" name="Username" placeholder="Enter Username"><br><br>
-                    <label class="PasswordText" for="Password">Password: </label>
-                    <input class="PasswordBox" type="password" id="Password" name="Password" placeholder="Enter Password"><br><br>
-                    <label class="EmailText" for="Email">Email: </label>
-                    <input class="EmailBox" type="text" id="Email" name="Email" placeholder="Enter Email"><br><br>
-                    <input class="ComfirmButton" type="submit" value="Comfirm">
+                <form id="Login-form"> 
+                    <!-- First Name-->
+                    <label class="FirstNameText" for="firstname">First Name: </label>
+                    <input class="FirstNameBox" type="text" id="firstname" name="firstname" placeholder="Enter First Name"><br><br>
+                    <!-- Last Name -->
+                    <label class="LastNameText" for="lastname">Last Name: </label>
+                    <input class="LastNameBox" type="text" id="lastname" name="lastname" placeholder="Enter Last Name"><br><br>
+                    <!-- Password-->
+                    <label class="PasswordText" for="password">Password: </label>
+                    <input class="PasswordBox" type="password" id="password" name="password" placeholder="Enter Password"><br><br>
+                    <!-- Confirm Password -->
+                    <label class="ConfirmPasswordText" for="confirmPassword">Confirm Password: </label>
+                    <input class="ConfirmPasswordBox" type="password" id="confirmPassword" name="confirmPassword" placeholder="Enter Confirm Password"><br><br>
+                    <!-- Email -->
+                    <label class="EmailText" for="email">Email: </label>
+                    <input class="EmailBox" type="text" id="email" name="email" placeholder="Enter Email"><br><br>
+                    <!-- Submit Button -->
                   </form>
+                  <button class="SubmitButton" onclick="RegisterUser()">Register</button>
             </div>
         </div>
-        <!-- need link to go back to landing page-->
-        <a href="" class="Name">
+        <!-- link to go back to landing page-->
+        <a href="http://localhost:8080/" class="Name">
             MuggleMuggle<br>
             Auction House
         </a>
     </body>
+    <script src="Register.js"></script>
 </html>
