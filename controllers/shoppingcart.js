@@ -5,8 +5,7 @@ const shoppingcart = {
         let { session, service } = ctx
 
         if (!session.userLogged) {
-            ctx.error('You have not logged in yet', 403)
-            return null
+            return ctx.error('You have not logged in yet', 403)
         }
 
         const userId = session.userId
@@ -16,10 +15,10 @@ const shoppingcart = {
         })
 
         if(!cart) {
-            return []
+            return ctx.success([])
         }
 
-        return cart
+        return ctx.success(cart)
     },
 // cart struct in db
     // userid
