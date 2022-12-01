@@ -8,6 +8,7 @@ module.exports = async function init(config) {
     // set-up collections
     try { await db.createCollection('users') } catch (e) {}
     try { await db.createCollection('id_manage') } catch (e) {}
+    try { await db.createCollection('listings') } catch (e) {}
 
     return db
 }
