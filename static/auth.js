@@ -16,7 +16,10 @@ function authRequest(url, form) {
         if (this.readyState === 4) {
             const messages = JSON.parse(this.response);
             if (messages.success === true){
-                window.location = ('/');
+                warnText = 'Successfully!'
+                setTimeout(() => {
+                    window.location = ('/');
+                }, 2000)
             } else {
                 warnText = messages.error || 'Magical Error Occurred'
             }
@@ -27,6 +30,24 @@ function authRequest(url, form) {
             box.style.display = 'block'
         }
     };
-    xhttp.open("POST", "/api/auth/login");
+    xhttp.open("POST", url);
     xhttp.send(formdata);
+}
+
+function userLogout(){
+    const xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState === 4){
+            const messages = JSON.parse(this.response);
+            if (messages.success === true){
+                alert('Logout Success');
+                window.location = '/';
+            }
+            else{
+                alert('Logout Error');
+            }
+        }
+    };
+    xhttp.open("POST", "/api/auth/logout");
+    xhttp.send()
 }

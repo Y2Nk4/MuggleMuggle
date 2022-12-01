@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="./styles.css"/>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=UnifrakturMaguntia|PT+Serif"/>
+    <title>MuggleMuggle Auction House</title>
+</head>
+<body>
+    <div id="app">
+        <div class="web-header">
+            <div class="upper"></div>
+            <h2>MuggleMuggle Auction House</h2>
+            <div class="lower"></div>
+        </div>
+
+        <div class="navbar">
+            <div>
+                <a href="/">All</a> |
+                <a href="/">Epic Deals</a> |
+                <a href="/">Best Seller</a> |
+                <a href="/">Back to Hogwarts</a>
+            </div>
+            <div v-if="!userLoggedIn">
+                <a href="/login.html">Sign In</a>
+                |
+                <a href="/signup.html">Sign Up</a>
+            </div>
+            <div v-else>
+                Welcome, {{ userInfo.firstname }} {{ userInfo.lastname }} |
+                <a href="/cart.html">Shopping Cart</a> |
+                <a @click="userLogout">Logout</a>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="sale-title title-font">BLACK FRIDAY SALE</h3>
+        </div>
+
+        <div>
+            {{ listingDetail }}
+        </div>
+    </div>
+</body>
+</html>
+
+<script src="home.js"></script>
+<script src="vue.min.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            userLoggedIn: false,
+            userInfo: {},
+            listingDetail: {}
+        },
+
+        methods: {
+            async fetchUserInfo() {
+                let resp = await fetch('/api/user/userInfo', {
+                    method: 'GET'
+                }).catch((error) => {
+                    console.log(error)
+                })
+                let result = await resp.json();
+                if (result && result.success) {
+                    this.userInfo = result.data
+                    this.userLoggedIn = true
+                }
+            },
+            async fetchListingDetail(listingId) {
+                let resp = await fetch('/api/listings/detail?id=' + listingId, {
+                    method: 'GET'
+                }).catch((error) => {
+                    console.log(error)
+                })
+                let result = await resp.json();
+                if (result && result.success) {
+                    this.listingDetail = result.data
+                } else {
+                    alert(result.error)
+                    window.location = '/'
+                }
+            },
+            async userLogout() {
+                console.log('user logged out')
+                let resp = await fetch('/api/auth/logout', {
+                    method: 'POST'
+                }).catch((error) => {
+                    console.log(error)
+                })
+                window.location = '/'
+            }
+        },
+
+        async mounted(){
+            let queries = window.location.search.substring(1).split("&")
+            let listingId;
+            for (let query of queries) {
+                let kv = query.split('=')
+                if(kv.length >= 2 && kv[0] === 'item') {
+                    listingId = kv[1]
+                    break
+                }
+            }
+            if (!listingId) {
+                window.location = '/'
+            }
+            this.fetchUserInfo()
+            this.fetchListingDetail(listingId)
+        }
+    });
+</script>
+
+<style>
+.navbar{
+    padding: 0 100px;
+    font-size: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+</style>

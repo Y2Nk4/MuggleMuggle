@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="./styles.css"/>
+    <link rel="stylesheet" type="text/css" href="./auth.css"/>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=UnifrakturMaguntia|PT+Serif"/>
+    <title>MuggleMuggle Auction House</title>
+</head>
+<body>
+    <div class="web-header">
+        <div class="upper"></div>
+        <h2>MuggleMuggle Auction House</h2>
+        <div class="lower"></div>
+    </div>
+
+    <div>
+        <h3 class="sale-title title-font">Sign In</h3>
+        <p class="title-font" style="text-align: center;margin: 0">We Secured this site By Magic</p>
+    </div>
+
+    <div>
+        <div class="auth-block">
+            <form id="login-form">
+                <div class="auth-form">
+                    <div class="warning-box" id="warning-box">
+
+                    </div>
+                    <div class="field">
+                        <label class="EmailText" for="email">Email: </label>
+                        <input class="EmailBox" type="text" id="email" name="email" placeholder="Enter Email">
+                    </div>
+                    <div class="field">
+                        <label class="PasswordText" for="password">Password: </label>
+                        <input class="PasswordBox" type="password" id="Password" name="password" placeholder="Enter Password">
+                    </div>
+                    <div class="field">
+                        <button class="LoginButton" type="button" onclick="userLogin()">Login</button>
+                    </div>
+
+                    <p>
+                        By continuing, you agree to MuggleMuggle's Conditions of Use and Privacy Notice.
+                    </p>
+
+                    <hr>
+                    <div>
+                        <span>New to MuggleMuggle?</span>
+                        <a href="/signup.html">Sign Up</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+<script src="auth.js"></script>
