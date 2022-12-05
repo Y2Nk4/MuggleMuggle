@@ -18,8 +18,10 @@ router.get('/api/user/userInfo', user.userInfo)
 router.post('/api/user/userUpdateInfo', user.userUpdateInfo)
 router.post('/api/user/changePassword', user.changePassword)
 
-router.get('/api/shoppingcart/getinfo', shoppingcart.getinfo)
-router.post('/api/shoppingcart/addItem', shoppingcart.addItem)
+router.get('/api/shoppingCart', shoppingcart.getCart)
+router.post('/api/shoppingCart/addItem', shoppingcart.addItem)
+router.post('/api/shoppingCart/remove', shoppingcart.removeFromCart)
+router.post('/api/shoppingCart/edit', shoppingcart.editCart)
 
 router.get('/api/listings/', listing.getListings)
 router.get('/api/listings/detail', listing.getListingDetail)

@@ -1,4 +1,7 @@
 let htmlEscape = require('../utils/escape')
+let mime = require('mime-types')
+let path = require('path')
+let fs = require('fs')
 const { ObjectId } = require('mongodb')
 
 module.exports = {
@@ -18,7 +21,7 @@ module.exports = {
         }
         let itemId;
         try {
-            itemId = ObjectId(ctx.request.query.id)
+            itemId = ObjectId(request.query.id)
         } catch (e) {
             return ctx.error('Missing Parameters', 400)
         }
@@ -36,13 +39,16 @@ module.exports = {
     },
 
     async addListing(ctx) {
-        const { service } = ctx
+        const { service, request } = ctx
 
         if (
-            !ctx.request.body.hasOwnProperty('name') ||
-            !ctx.request.body.hasOwnProperty('description') ||
-            !ctx.request.body.hasOwnProperty('price') ||
-            !ctx.request.body.hasOwnProperty('amount')
+            !request.body.hasOwnProperty('name') ||
+            !request.body.hasOwnProperty('description') ||
+            !request.body.hasOwnProperty('price') ||
+            !request.files.hasOwnProperty('image') ||
+            !request.body.hasOwnProperty('amount') ||
+            isNaN(Number(request.body.amount)) ||
+            isNaN(Number(request.body.price))
         ) {
             return ctx.error('Missing Parameters', 400)
         }
@@ -50,24 +56,32 @@ module.exports = {
         let user = await service.getLoggedInUser()
         if (!user) return
 
+        const {filepath, name, mimetype, newFilename} = request.files.image
+        let newPath = path.resolve('static/uploads', `${newFilename}.${mime.extension(mimetype)}`)
+        let storePath = `uploads/${newFilename}.${mime.extension(mimetype)}`
+        fs.copyFileSync(filepath, newPath)
+
         const result = await service.db.collection('listings').insertOne({
             user_id: user.id,
-            name: htmlEscape(ctx.request.body.name),
-            description: htmlEscape(ctx.request.body.description),
-            price: Number(ctx.request.body.price),
-            amount: parseInt(ctx.request.body.amount),
+            name: htmlEscape(request.body.name),
+            description: htmlEscape(request.body.description),
+            price: Number(request.body.price),
+            amount: parseInt(request.body.amount),
+            image: storePath
         })
 
-        console.log(result)
-
-        return ctx.success('Successfully Added')
+        if (result.acknowledged) {
+            return ctx.success('Successfully Added')
+        } else {
+            return ctx.error('Internal Error', 500)
+        }
     },
 
     async editListing(ctx) {
         const { service } = ctx
 
         if (
-            !ctx.request.body.hasOwnProperty('listingId')
+            !request.body.hasOwnProperty('listingId')
         ) {
             return ctx.error('Missing Parameters', 400)
         }
@@ -77,7 +91,7 @@ module.exports = {
 
         const listing = await service.db.collection('listings').findOne({
             user_id: user.id,
-            _id: ctx.request.body.listingId
+            _id: request.body.listingId
         })
 
         if (!listing) {
@@ -89,10 +103,10 @@ module.exports = {
             user_id: user.id
         }, {
             $set: {
-                title: ctx.request.body.hasOwnProperty('title') ? ctx.request.body.title : undefined,
-                description: ctx.request.body.hasOwnProperty('description') ? ctx.request.body.description : undefined,
-                price: ctx.request.body.hasOwnProperty('price') ? ctx.request.body.price : undefined,
-                amount: ctx.request.body.hasOwnProperty('amount') ? ctx.request.body.amount : undefined,
+                title: request.body.hasOwnProperty('title') ? request.body.title : undefined,
+                description: request.body.hasOwnProperty('description') ? request.body.description : undefined,
+                price: request.body.hasOwnProperty('price') ? request.body.price : undefined,
+                amount: request.body.hasOwnProperty('amount') ? request.body.amount : undefined,
             }
         })
 
@@ -105,7 +119,7 @@ module.exports = {
         const { service } = ctx
 
         if (
-            !ctx.request.body.hasOwnProperty('listingId')
+            !request.body.hasOwnProperty('listingId')
         ) {
             return ctx.error('Missing Parameters', 400)
         }
@@ -115,7 +129,7 @@ module.exports = {
 
         const listing = await service.db.collection('listings').findOne({
             user_id: user.id,
-            _id: ctx.request.body.listingId
+            _id: request.body.listingId
         })
 
         if (!listing) {

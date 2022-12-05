@@ -110,3 +110,5 @@ coverage/
 run/
 .DS_Store
 .vscode
+
+static/uploads

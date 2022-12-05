@@ -3,16 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="./styles.css"/>
-    <link rel="stylesheet" type="text/css" href="./auth.css"/>
+    <link rel="stylesheet" type="text/css" href="form.css"/>
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=UnifrakturMaguntia|PT+Serif"/>
     <title>MuggleMuggle Auction House</title>
 </head>
 <body>
-    <div class="web-header">
-        <div class="upper"></div>
-        <h2>MuggleMuggle Auction House</h2>
-        <div class="lower"></div>
-    </div>
+    <a href="/">
+        <div class="web-header">
+            <div class="upper"></div>
+            <h2>MuggleMuggle Auction House</h2>
+            <div class="lower"></div>
+        </div>
+    </a>
 
     <div>
         <h3 class="sale-title title-font">Sign In</h3>
@@ -20,12 +22,10 @@
     </div>
 
     <div>
-        <div class="auth-block">
+        <div class="muggle-form-block">
             <form id="login-form">
-                <div class="auth-form">
-                    <div class="warning-box" id="warning-box">
-
-                    </div>
+                <div class="muggle-form">
+                    <div class="warning-box" id="warning-box"></div>
                     <div class="field">
                         <label class="EmailText" for="email">Email: </label>
                         <input class="EmailBox" type="text" id="email" name="email" placeholder="Enter Email">
