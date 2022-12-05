@@ -3,46 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="./styles.css"/>
-    <link rel="stylesheet" type="text/css" href="./auth.css"/>
+    <link rel="stylesheet" type="text/css" href="./form.css"/>
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=UnifrakturMaguntia|PT+Serif"/>
     <title>MuggleMuggle Auction House</title>
 </head>
 <body>
-    <div class="web-header">
-        <div class="upper"></div>
-        <h2>MuggleMuggle Auction House</h2>
-        <div class="lower"></div>
+    <a href="/">
+        <div class="web-header">
+            <div class="upper"></div>
+            <h2>MuggleMuggle Auction House</h2>
+            <div class="lower"></div>
+        </div>
+    </a>
+
+    <div>
+        <h3 class="sale-title title-font">Account</h3>
+        <p class="title-font" style="text-align: center;margin: 0">We Secured this site By Magic</p>
     </div>
 
     <div>
-        <div class="auth-block">
-                <div class="auth-form">
-                    <div class="warning-box" id="warning-box">
+        <div class="warning-box" id="warning-box"></div>
 
-                    </div>
-                    <div class="field">
-                        <label class="EmailText" for="email">Email: </label>
-                        <input class="EmailBox" type="text" id="email" name="email" placeholder="Enter Email">
-                    </div>
-                    <div class="field">
-                        <label class="PasswordText" for="password">Password: </label>
-                        <input class="PasswordBox" type="password" id="Password" name="password" placeholder="Enter Password">
-                    </div>
-                    <div class="field">
-                        <button class="LoginButton" type="button" onclick="userLogin()">Login</button>
-                    </div>
-
-                    <p>
-                        By continuing, you agree to MuggleMuggle's Conditions of Use and Privacy Notice.
-                    </p>
-
-                    <hr>
-                    <div>
-                        <span>New to MuggleMuggle?</span>
-                        <a href="/signup.html">Sign Up</a>
-                    </div>
+        <div class="muggle-form-block">
+            <!-- Show User Information -->
+            <div class="muggle-form" id="user-profile">
+                <div class="field">
+                    <button type="button" onclick="Form('change-profile-form')">Edit Profile</button>
                 </div>
+                <div class="field">
+                    <button type="button" onclick="Form('change-password-form')">Change Password</button>
+                </div>
+            </div>
+            <!-- Edit User Information -->
+            <form style="display: none;" id="change-profile-form" class="muggle-form">
+                <div class="field">
+                    <label for="firstname">First Name: </label>
+                    <input type="text" id="firstname" name="firstname" placeholder="First Name">
+                </div>
+                <div class="field">
+                    <label for="lastname">Last Name: </label>
+                    <input type="text" id="lastname" name="lastname" placeholder="Last Name">
+                </div>
+                <div class="field">
+                    <label for="email">Email: </label>
+                    <input type="text" id="email" name="email" placeholder="Enter Email">
+                </div>
+                <div class="field">
+                    <button type="button" onclick="Form('change-profile-form')">Back</button>
+                </div>
+                <div class="field">
+                    <button type="button" onclick="ChangeProfile()">Done</button>
+                </div>
+            </form>
+            <!-- Change User Password -->
+            <form style="display: none;" id="change-password-form" class="muggle-form">
+                <div class="field">
+                    <label class="PasswordText" for="password">Password: </label>
+                    <input type="password" id="password" name="password" placeholder="Enter Password">
+                </div>
+                <div class="field">
+                    <label class="PasswordText" for="password">Confirm Password: </label>
+                    <input type="password" id="confirz`mPassword" name="confirmPassword" placeholder="Confirm Password">
+                </div>
+                <div class="field">
+                    <button type="button" onclick="Form('change-password-form')">Back</button>
+                </div>
+                <div class="field">
+                    <button type="button" onclick="ChangePassword()">Done</button>
+                </div>
+            </form>
         </div>
     </div>
 </body>
 </html>
+<script src="/controllers/user.js"></script>
+<script>
+function Form(form){
+    var x = document.getElementById("user-profile");
+    var y = document.getElementById(form)
+    if (x.style.display == "block"){
+        x.style.display = "none";
+        y.style.display = "block";
+    }
+    else{
+        x.style.display = "block";
+        y.style.display = "none";
+    }
+}
+</script>
