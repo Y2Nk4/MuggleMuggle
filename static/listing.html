@@ -8,11 +8,13 @@
 </head>
 <body>
     <div id="app">
-        <div class="web-header">
-            <div class="upper"></div>
-            <h2>MuggleMuggle Auction House</h2>
-            <div class="lower"></div>
-        </div>
+        <a href="/">
+            <div class="web-header">
+                <div class="upper"></div>
+                <h2>MuggleMuggle Auction House</h2>
+                <div class="lower"></div>
+            </div>
+        </a>
 
         <div class="navbar">
             <div>
@@ -28,23 +30,40 @@
             </div>
             <div v-else>
                 Welcome, {{ userInfo.firstname }} {{ userInfo.lastname }} |
+                <a href="/addListing.html">Add Listing</a> |
+                <a href="/addAuction.html">New Auction</a> |
                 <a href="/cart.html">Shopping Cart</a> |
                 <a @click="userLogout">Logout</a>
             </div>
         </div>
 
-        <div>
-            <h3 class="sale-title title-font">BLACK FRIDAY SALE</h3>
-        </div>
+        <div class="warning-box" id="warning-box" style="margin: 10px 100px;"></div>
 
-        <div>
-            {{ listingDetail }}
+        <div class="listing-detail">
+            <div class="item-image">
+                <img :src="listingDetail.image" alt="">
+            </div>
+            <div class="item-info">
+                <h3 class="item-name">{{ listingDetail.name }}</h3>
+                <span class="price">$ {{ listingDetail.price }}</span>
+                <span>Only {{ listingDetail.amount }} left</span>
+                <p>{{ listingDetail.description }}</p>
+
+                <div class="field">
+                    <label for="amount">Amount:</label>
+                    <input class="amount-input" id="amount" name="amount" type="number" v-model="amount"/>
+                </div>
+                <div>
+                    <button class="flag-button add-to-cart" @click="addToCart">Add to Cart</button>
+                </div>
+            </div>
         </div>
     </div>
 </body>
 </html>
 
 <script src="home.js"></script>
+<script src="common.js"></script>
 <script src="vue.min.js"></script>
 <script>
     var app = new Vue({
@@ -52,22 +71,11 @@
         data: {
             userLoggedIn: false,
             userInfo: {},
-            listingDetail: {}
+            listingDetail: {},
+            amount: 1
         },
 
         methods: {
-            async fetchUserInfo() {
-                let resp = await fetch('/api/user/userInfo', {
-                    method: 'GET'
-                }).catch((error) => {
-                    console.log(error)
-                })
-                let result = await resp.json();
-                if (result && result.success) {
-                    this.userInfo = result.data
-                    this.userLoggedIn = true
-                }
-            },
             async fetchListingDetail(listingId) {
                 let resp = await fetch('/api/listings/detail?id=' + listingId, {
                     method: 'GET'
@@ -82,14 +90,24 @@
                     window.location = '/'
                 }
             },
-            async userLogout() {
-                console.log('user logged out')
-                let resp = await fetch('/api/auth/logout', {
-                    method: 'POST'
+            userLogout: userLogout,
+            async addToCart() {
+                let form = new FormData()
+                form.append('item_id', this.listingDetail._id)
+                form.append('amount', this.amount)
+
+                let resp = await fetch('/api/shoppingCart/addItem', {
+                    method: 'POST',
+                    body: form
                 }).catch((error) => {
-                    console.log(error)
+                    displayError(error.message)
                 })
-                window.location = '/'
+                let result = await resp.json()
+                if (result && result.success) {
+                    displayError(result.data)
+                } else {
+                    displayError(result.error || 'Failed to add to your cart')
+                }
             }
         },
 
@@ -106,7 +124,10 @@
             if (!listingId) {
                 window.location = '/'
             }
-            this.fetchUserInfo()
+            let { userLoggedIn, userInfo } = await fetchUserInfo()
+            this.userLoggedIn = userLoggedIn
+            this.userInfo = userInfo
+
             this.fetchListingDetail(listingId)
         }
     });
@@ -119,5 +140,53 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+}
+.listing-detail{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 35px;
+}
+.item-image{
+    border: solid 2px #ac9565;
+    padding: 10px;
+    margin-right: 80px;
+}
+.item-info{
+    display: flex;
+    flex-direction: column;
+}
+.item-info > *{
+    display: inline-block;
+}
+.price{
+    font-size: 22px;
+    margin: 10px 0;
+    color: #b09667;
+}
+.item-name{
+    margin: 0;
+}
+button.add-to-cart{
+    width: 150px;
+    height: 26px;
+    font-size: 18px;
+}
+input.amount-input{
+    font-family: "PT Serif", sans-serif;
+    border-radius: 0!important;
+    border: solid 2px #211916;
+    background: transparent;
+
+    transition: all 0.1s ease-in-out;
+    font-size: 16px;
+    max-width: 2em;
+}
+input.amount-input:focus,
+input.amount-input:active{
+    border: solid 2px #9d786c;
+}
+.field{
+    margin-bottom: 10px;
 }
 </style>

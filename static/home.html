@@ -8,11 +8,13 @@
 </head>
 <body>
     <div id="app">
-        <div class="web-header">
-            <div class="upper"></div>
-            <h2>MuggleMuggle Auction House</h2>
-            <div class="lower"></div>
-        </div>
+        <a href="/">
+            <div class="web-header">
+                <div class="upper"></div>
+                <h2>MuggleMuggle Auction House</h2>
+                <div class="lower"></div>
+            </div>
+        </a>
 
         <div class="navbar">
             <div>
@@ -28,46 +30,44 @@
             </div>
             <div v-else>
                 Welcome, {{ userInfo.firstname }} {{ userInfo.lastname }} |
+                <a href="/addListing.html">Add Listing</a> |
+                <a href="/addAuction.html">New Auction</a> |
                 <a href="/cart.html">Shopping Cart</a> |
                 <a @click="userLogout">Logout</a>
             </div>
         </div>
 
         <div>
-            <h3 class="sale-title title-font">BLACK FRIDAY SALE</h3>
+            <h3 class="sale-title title-font">Marketplace</h3>
         </div>
 
         <div class="listings">
             <div class="items" v-for="item in listings">
                 <a :href="'/listing.html?item=' + item._id">
-                    <div><img src="./images/veela-hair.png" alt=""></div>
+                    <div><img :src="item.image" alt=""></div>
                     <div>
                         <div class="item-type">
                             <h3>{{ item.name }}</h3>
                         </div>
+                        <span>$ {{ item.price }}</span>
                         <p>
                             {{ item.description }}
                         </p>
                     </div>
                 </a>
             </div>
-            <div class="items">
-                <div><img src="./images/time-tuner.png" alt=""></div>
-                <div>
-                    <div class="item-type">
-                        <h3>Time Tuner</h3>
-                    </div>
-                    <p>
-                        Magically tune the time
-                    </p>
-                </div>
-            </div>
+        </div>
+
+
+        <div>
+            <h3 class="sale-title title-font">Auctions</h3>
         </div>
     </div>
 </body>
 </html>
 
 <script src="home.js"></script>
+<script src="common.js"></script>
 <script src="vue.min.js"></script>
 <script>
     var app = new Vue({
@@ -79,18 +79,6 @@
         },
 
         methods: {
-            async fetchUserInfo() {
-                let resp = await fetch('/api/user/userInfo', {
-                    method: 'GET'
-                }).catch((error) => {
-                    console.log(error)
-                })
-                let result = await resp.json();
-                if (result && result.success) {
-                    this.userInfo = result.data
-                    this.userLoggedIn = true
-                }
-            },
             async fetchListings() {
                 let resp = await fetch('/api/listings/', {
                     method: 'GET'
@@ -114,7 +102,9 @@
         },
 
         async mounted(){
-            this.fetchUserInfo()
+            let { userLoggedIn, userInfo } = await fetchUserInfo()
+            this.userLoggedIn = userLoggedIn
+            this.userInfo = userInfo
             this.fetchListings()
         }
     });

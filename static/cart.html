@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="./styles.css"/>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=UnifrakturMaguntia|PT+Serif"/>
+    <title>MuggleMuggle Auction House</title>
+</head>
+<body>
+    <div id="app">
+        <a href="/">
+            <div class="web-header">
+                <div class="upper"></div>
+                <h2>MuggleMuggle Auction House</h2>
+                <div class="lower"></div>
+            </div>
+        </a>
+
+        <div class="navbar">
+            <div>
+                <a href="/">All</a> |
+                <a href="/">Epic Deals</a> |
+                <a href="/">Best Seller</a> |
+                <a href="/">Back to Hogwarts</a>
+            </div>
+            <div v-if="!userLoggedIn">
+                <a href="/login.html">Sign In</a>
+                |
+                <a href="/signup.html">Sign Up</a>
+            </div>
+            <div v-else>
+                Welcome, {{ userInfo.firstname }} {{ userInfo.lastname }} |
+                <a href="/addListing.html">Add Listing</a> |
+                <a href="/addAuction.html">New Auction</a> |
+                <a href="/cart.html">Shopping Cart</a> |
+                <a @click="userLogout">Logout</a>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="sale-title title-font">Shopping Cart</h3>
+        </div>
+
+        <div class="shopping-cart">
+            <div class="warning-box" id="warning-box" style="margin: 10px 100px;"></div>
+
+            <div class="cart-item" v-for="cartItem in shoppingCartItems">
+                <img :src="cartItem.item.image" alt="">
+                <div style="margin-left: 80px; width: 100%">
+                    <a :href="'/listing.html?item=' + cartItem.item_id">
+                        <h2>{{ cartItem.item.name }}</h2>
+                    </a>
+
+                    <div class="field" style="margin: 20px 0">
+                        <label for="amount">Amount:</label>
+                        <input class="amount-input" id="amount" name="amount" type="number" v-model="cartItem.amount"/>
+                    </div>
+
+                    <button type="submit" @click="updateCart(cartItem)" class="text-button">update</button> |
+                    <button type="submit" @click="removeFromCart(cartItem)" class="text-button">remove</button>
+                </div>
+                <div class="price-column">
+                    <h3 style="white-space: nowrap;">$ {{ cartItem.total_price }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script src="home.js"></script>
+<script src="common.js"></script>
+<script src="vue.min.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            userLoggedIn: false,
+            userInfo: {},
+            shoppingCartItems: []
+        },
+
+        methods: {
+            async fetchShoppingCart() {
+                let resp = await fetch('/api/shoppingCart', {
+                    method: 'GET'
+                }).catch((error) => {
+                    console.log(error)
+                })
+                let result = await resp.json();
+                if (result && result.success) {
+                    this.shoppingCartItems = result.data
+                }
+            },
+            async userLogout() {
+                console.log('user logged out')
+                let resp = await fetch('/api/auth/logout', {
+                    method: 'POST'
+                }).catch((error) => {
+                    console.log(error)
+                })
+                window.location = '/'
+            },
+            async updateCart(cartItem) {
+                console.log(cartItem)
+                let form = new FormData()
+                form.append('cart_id', cartItem._id)
+                form.append('amount', cartItem.amount)
+
+                let resp = await fetch('/api/shoppingCart/edit', {
+                    method: 'POST',
+                    body: form
+                }).catch((error) => {
+                    console.log(error)
+                })
+
+                displayError('Successfully updated')
+                await this.fetchShoppingCart()
+            },
+            async removeFromCart(cartItem) {
+                console.log(cartItem)
+                let form = new FormData()
+                form.append('cart_id', cartItem._id)
+
+                let resp = await fetch('/api/shoppingCart/remove', {
+                    method: 'POST',
+                    body: form
+                }).catch((error) => {
+                    console.log(error)
+                })
+
+                displayError('Successfully removed')
+                await this.fetchShoppingCart()
+            }
+        },
+
+        async mounted(){
+            let { userLoggedIn, userInfo } = await fetchUserInfo(true)
+            this.userLoggedIn = userLoggedIn
+            this.userInfo = userInfo
+            this.fetchShoppingCart()
+        }
+    });
+</script>
+
+<style>
+.shopping-cart{
+    display: flex;
+    flex-direction: column;
+}
+.shopping-cart .cart-item{
+    display: inline-flex;
+    flex-direction: row;
+
+    margin: 10px 100px;
+    border: solid 2px #af9663;
+    padding: 15px;
+}
+input.amount-input{
+    font-family: "PT Serif", sans-serif;
+    border-radius: 0!important;
+    border: solid 2px #211916;
+    background: transparent;
+
+    transition: all 0.1s ease-in-out;
+    font-size: 16px;
+    max-width: 4em;
+}
+input.amount-input:focus,
+input.amount-input:active{
+    border: solid 2px #9d786c;
+}
+
+.price-column{
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 85px;
+    min-width: 5rem;
+}
+.padding{
+    width: 100%;
+}
+</style>

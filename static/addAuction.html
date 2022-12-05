@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="./styles.css"/>
+    <link rel="stylesheet" type="text/css" href="form.css"/>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=UnifrakturMaguntia|PT+Serif"/>
+    <title>MuggleMuggle Auction House</title>
+</head>
+<body>
+    <div id="app">
+        <div class="web-header">
+            <div class="upper"></div>
+            <h2>MuggleMuggle Auction House</h2>
+            <div class="lower"></div>
+        </div>
+
+        <div class="navbar">
+            <div>
+                <a href="/">All</a> |
+                <a href="/">Epic Deals</a> |
+                <a href="/">Best Seller</a> |
+                <a href="/">Back to Hogwarts</a>
+            </div>
+            <div v-if="!userLoggedIn">
+                <a href="/login.html">Sign In</a>
+                |
+                <a href="/signup.html">Sign Up</a>
+            </div>
+            <div v-else>
+                Welcome, {{ userInfo.firstname }} {{ userInfo.lastname }} |
+                <a href="/addListing.html">Add Listing</a> |
+                <a href="/addAuction.html">New Auction</a> |
+                <a href="/cart.html">Shopping Cart</a> |
+                <a @click="userLogout">Logout</a>
+            </div>
+        </div>
+
+
+        <div>
+            <div class="muggle-form-block">
+                <form id="add-listing-form">
+                    <div class="muggle-form add-listing">
+
+                        <h4 class="form-title">Start a New Auction</h4>
+
+                        <p>
+                            Caution: You can still stop the auction after starting the auction,
+                            but once someone place a bid, you can no longer stop it.
+                        </p>
+
+                        <div class="warning-box" id="warning-box">
+
+                        </div>
+                        <div class="field">
+                            <label for="name">Name: </label>
+                            <input type="text" id="name" name="name" placeholder="Item Name">
+                        </div>
+                        <div class="field">
+                            <label for="start_price">Start Price: </label>
+                            <input type="text" id="start_price" name="start_price" placeholder="Start Price">
+                        </div>
+                        <div class="field">
+                            <label for="end_date">End Time: </label>
+                            <div>
+                                <input type="date" id="end_date" name="end_date" required>
+                                <input type="time" id="end_time" name="end_time" required>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label for="description">Description: </label>
+                            <textarea id="description" name="description" placeholder="Describe your item">
+                            </textarea>
+                        </div>
+                        <div class="field">
+                            <label for="image">Image: </label>
+                            <input type="file" id="image" name="image" accept="image/png, image/jpeg">
+                        </div>
+                        <div class="field">
+                            <button class="submitAuction" type="button" @click="submitAuction">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script src="home.js"></script>
+<script src="common.js"></script>
+<script src="vue.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            userLoggedIn: false,
+            userInfo: {},
+            listingDetail: {}
+        },
+
+        methods: {
+            async submitAuction() {
+                let form = document.querySelector('#add-listing-form')
+                const formData = new FormData(form)
+                let endTime = formData.get('end_date') + ' ' + formData.get('end_time')
+                console.log(endTime)
+                endTime = dayjs(endTime, "YYYY-MM-DD HH:mm")
+                console.log(endTime, !endTime.isValid(), endTime.isBefore(dayjs().add(1, 'hour')))
+                if (!endTime.isValid() || endTime.isBefore(dayjs().add(1, 'hour'))) {
+                    displayError('Auction End time needs to be at least 1 hours after auction starts')
+                    return
+                } else {
+                    displayError()
+                }
+                formData.delete('end_date')
+                formData.set('end_time', endTime.toISOString())
+                console.log(formData)
+
+                let resp = await fetch('/api/listings/add', {
+                    method: 'POST',
+                    body: formData
+                }).catch((error) => {
+                    console.log(error)
+                })
+                let error = 'Failed to Add'
+                let result = await resp.json();
+                if (result && result.success) {
+                    this.listingDetail = result.data
+                    error = null
+                } else {
+                    error = result.success || error
+                }
+
+                if (error) {
+                    displayError(error)
+                } else {
+                    displayError(result.data)
+                }
+            },
+            userLogout: userLogout
+        },
+
+        async mounted(){
+            let { userLoggedIn, userInfo } = await fetchUserInfo(true)
+            this.userLoggedIn = userLoggedIn
+            this.userInfo = userInfo
+        }
+    });
+</script>
+
+<style>
+.navbar{
+    padding: 0 100px;
+    font-size: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.muggle-form-block .muggle-form.add-listing{
+    width: 500px;
+}
+.muggle-form-block .muggle-form.add-listing .field > input,
+.muggle-form-block .muggle-form.add-listing .field > textarea{
+    width: 70%;
+}
+</style>

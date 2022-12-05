@@ -16,7 +16,7 @@ function authRequest(url, form) {
         if (this.readyState === 4) {
             const messages = JSON.parse(this.response);
             if (messages.success === true){
-                warnText = 'Successfully!'
+                warnText = 'Successfully! Teleporting you to the correct place.'
                 setTimeout(() => {
                     window.location = ('/');
                 }, 2000)
