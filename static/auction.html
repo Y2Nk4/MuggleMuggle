@@ -50,7 +50,8 @@
             <div class="item-info">
                 <h3 class="item-name">{{ auctionDetail.name }}</h3>
                 <span class="price">$ {{ itemPrice }}</span>
-                <span>Only  left</span>
+                <span>{{ timeLeft }}</span>
+                <span>(End at {{auctionDetail.end_time_text}})</span>
                 <p>{{ auctionDetail.description }}</p>
 
                 <div class="field">
@@ -67,10 +68,12 @@
             <div class="bidder-info" style="margin-left: 50px">
                 <h3 style="margin: 0">Bid History</h3>
 
-                <div class="histories">
-                    <div class="history" v-for="info in history">
-                        <div><p>{{info.username}}</p></div>
-                        <div><p>{{info.bid_price}}</p></div>
+                <div class="histories-wrap">
+                    <div class="histories">
+                        <div class="history" v-for="info in history">
+                            <p>{{info.username}}</p>
+                            <p>$ {{info.bid_price}}</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -82,7 +85,45 @@
 <script src="home.js"></script>
 <script src="common.js"></script>
 <script src="vue.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/updateLocale.js"></script>
 <script>
+    dayjs.extend(window.dayjs_plugin_relativeTime, {
+        thresholds: [
+            { l: 's', r: 1 },
+            { l: 'm', r: 1 },
+            { l: 'mm', r: 59, d: 'minute' },
+            { l: 'h', r: 1 },
+            { l: 'hh', r: 23, d: 'hour' },
+            { l: 'd', r: 1 },
+            { l: 'dd', r: 29, d: 'day' },
+            { l: 'M', r: 1 },
+            { l: 'MM', r: 11, d: 'month' },
+            { l: 'y' },
+            { l: 'yy', d: 'year' }
+        ]
+    })
+    dayjs.extend(window.dayjs_plugin_updateLocale)
+    dayjs.updateLocale('en', {
+        relativeTime: {
+            future: "Only %s Left",
+            past: "Ended %s Ago",
+            s: '%d seconds',
+            ss: '%d seconds',
+            m: "%d minute",
+            mm: "%d minutes",
+            h: "%d hour",
+            hh: "%d hours",
+            d: "%d day",
+            dd: "%d days",
+            M: "%d month",
+            MM: "%d months",
+            y: "%d year",
+            yy: "%d years"
+        }
+    })
+
     var app = new Vue({
         el: '#app',
         data: {
@@ -95,7 +136,9 @@
             readyToBid: false,
             auctionConnInfo: null,
             history: [],
-            itemPrice: 0
+            itemPrice: 0,
+            timeLeft: '',
+            timer: null
         },
 
         methods: {
@@ -108,9 +151,15 @@
                 let result = await resp.json();
                 if (result && result.success) {
                     this.auctionDetail = result.data
+                    this.auctionDetail.end_time_text = dayjs(this.auctionDetail.end_time).format('YYYY-MM-DD HH:mm:ss')
                     this.bidPrice = result.data.price + 10
                     this.itemPrice = result.data.price
                     this.history = result.data.auction_history
+
+                    if (this.timer) clearInterval(this.timer)
+                    this.timer = setInterval(() => {
+                        this.timeLeft = dayjs().to(dayjs(this.auctionDetail.end_time))
+                    }, 1000)
 
                     this.connectWS()
                 } else {
@@ -149,11 +198,13 @@
                     case 'update':
                         this.auctionDetail.price = message.data.bid_price
                         this.itemPrice = message.data.bid_price
+                        this.bidPrice = message.data.bid_price + 10
                         console.log(this.history)
                         this.history.push(message.data.history_record)
                         break
 
                     case 'error':
+                    case 'bid-success':
                         displayError()
                         displayError(message.message)
                         break;
@@ -201,6 +252,15 @@
     border: solid 2px #ac9565;
     padding: 10px;
     margin-right: 80px;
+    max-width: 225px;
+    max-height: 225px;
+}
+.item-image img{
+    border: solid 2px #ac9565;
+    padding: 10px;
+    margin-right: 80px;
+    width: 200px;
+    height: 200px;
 }
 .item-info{
     display: flex;
@@ -238,5 +298,20 @@ input.amount-input:active{
 }
 .field{
     margin-bottom: 10px;
+}
+div.histories-wrap{
+    height: 25em;
+    overflow-y: scroll;
+}
+div.histories{
+    display: flex;
+    flex-direction: column-reverse;
+}
+div.histories > div.history{
+    display: inline-flex;
+    flex-direction: row;
+}
+div.histories > div.history p{
+    margin: 10px 5px;
 }
 </style>

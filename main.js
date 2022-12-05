@@ -8,6 +8,7 @@ const responseHelper = require('./response')
 const getLoggedInUserMiddleware = require('./utils/getLoggedInUser')
 const staticFiles = require('./utils/staticFiles')
 const koaWebsocket = require('koa-websocket')
+const dayjs = require('dayjs')
 
 
 ;(async () => {
@@ -42,6 +43,33 @@ const koaWebsocket = require('koa-websocket')
             console.log('out')
         })
         .use(wsRouter.routes())
+
+    app.auctionInterval = setInterval(async () => {
+        let auctions = await db.collection('auction').find({
+            ended: false
+        }).toArray()
+        let current = dayjs()
+        let endedAuctions = []
+        for(let auction in auctions) {
+            const endTime = dayjs(auction.end_time)
+            if (!endTime.isValid() || endTime.isBefore(current)) {
+                endedAuctions.push(auction._id)
+            }
+        }
+        if (endedAuctions.length > 0) {
+            const result = await db.collection('auction').update({
+                id: {
+                    $in: endedAuctions
+                }
+            }, {
+                '$set': {
+                    ended: true
+                }
+            })
+            console.log('Auction Control, updated', result)
+            console.log(auctions.length - endedAuctions.length, 'auction ongoing')
+        }
+    }, 1000)
 
     app.listen(config.port, () => {
         console.log('Listening to', config.port)

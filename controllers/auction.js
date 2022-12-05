@@ -78,6 +78,7 @@ module.exports = {
             name: htmlEscape(request.body.name),
             description: htmlEscape(request.body.description),
             start_price: Number(request.body.start_price),
+            end_time: endTime.toISOString(),
             price: Number(request.body.start_price),
             amount: parseInt(request.body.amount),
             image: storePath,
@@ -184,6 +185,13 @@ module.exports = {
             if (message) {
                 switch (message.type){
                     case 'bid':
+                        if (auction.ended) {
+                            ctx.websocket.send(JSON.stringify({
+                                type: 'error',
+                                message: 'The Auction ended'
+                            }))
+                            return
+                        }
                         let bidPrice = Number(message.price)
                         if (isNaN(bidPrice) || auctionPrice[auctionId] >= bidPrice) {
                             ctx.websocket.send(JSON.stringify({
@@ -200,7 +208,9 @@ module.exports = {
                             id: auctionId
                         }, {
                             '$set': {
-                                price: bidPrice
+                                price: bidPrice,
+                                last_bidder: user.id,
+                                removable: false
                             }
                         })
                         console.log(result)
