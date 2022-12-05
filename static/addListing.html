@@ -105,10 +105,13 @@
                 let error = 'Failed to Add'
                 let result = await resp.json();
                 if (result && result.success) {
-                    this.listingDetail = result.data
-                    error = null
+                    error = result.data.message
+                    setTimeout(() => {
+                        window.location = '/listing.html?item=' + result.data.listingId
+                    }, 1500)
+
                 } else {
-                    error = result.success || error
+                    error = result.error || error
                 }
 
                 if (error) {

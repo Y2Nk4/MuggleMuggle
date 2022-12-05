@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="./styles.css"/>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=UnifrakturMaguntia|PT+Serif"/>
+    <title>MuggleMuggle Auction House</title>
+</head>
+<body>
+    <div id="app">
+        <a href="/">
+            <div class="web-header">
+                <div class="upper"></div>
+                <h2>MuggleMuggle Auction House</h2>
+                <div class="lower"></div>
+            </div>
+        </a>
+
+        <div class="navbar">
+            <div>
+                <a href="/">All</a> |
+                <a href="/">Epic Deals</a> |
+                <a href="/">Best Seller</a> |
+                <a href="/">Back to Hogwarts</a>
+            </div>
+            <div v-if="!userLoggedIn">
+                <a href="/login.html">Sign In</a>
+                |
+                <a href="/signup.html">Sign Up</a>
+            </div>
+            <div v-else>
+                Welcome, {{ userInfo.firstname }} {{ userInfo.lastname }} |
+                <a href="/addListing.html">Add Listing</a> |
+                <a href="/addAuction.html">New Auction</a> |
+                <a href="/cart.html">Shopping Cart</a> |
+                <a @click="userLogout">Logout</a>
+            </div>
+        </div>
+
+        <div>
+            <h3>Auction</h3>
+        </div>
+
+        <div class="warning-box" id="warning-box" style="margin: 10px 100px;"></div>
+
+        <div class="listing-detail">
+            <div class="item-image">
+                <img :src="auctionDetail.image" alt="">
+            </div>
+            <div class="item-info">
+                <h3 class="item-name">{{ auctionDetail.name }}</h3>
+                <span class="price">$ {{ itemPrice }}</span>
+                <span>Only  left</span>
+                <p>{{ auctionDetail.description }}</p>
+
+                <div class="field">
+                    <label for="bid_price">Bid:</label>
+                    <input class="amount-input" id="bid_price"
+                           name="bid_price" type="number" v-model="bidPrice"
+                           style="min-width: 5em"
+                    />
+                </div>
+                <div>
+                    <button :class="`flag-button add-to-cart` + (!readyToBid ? 'disabled' : '')" @click="placeBid" :disabled="!readyToBid">Place bid</button>
+                </div>
+            </div>
+            <div class="bidder-info" style="margin-left: 50px">
+                <h3 style="margin: 0">Bid History</h3>
+
+                <div class="histories">
+                    <div class="history" v-for="info in history">
+                        <div><p>{{info.username}}</p></div>
+                        <div><p>{{info.bid_price}}</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script src="home.js"></script>
+<script src="common.js"></script>
+<script src="vue.min.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            userLoggedIn: false,
+            userInfo: {},
+            auctionDetail: {},
+            amount: 1,
+            bidPrice: 0,
+            wsConnection: null,
+            readyToBid: false,
+            auctionConnInfo: null,
+            history: [],
+            itemPrice: 0
+        },
+
+        methods: {
+            async fetchAuctionDetail(auctionId) {
+                let resp = await fetch('/api/auctions/detail?id=' + auctionId, {
+                    method: 'GET'
+                }).catch((error) => {
+                    console.log(error)
+                })
+                let result = await resp.json();
+                if (result && result.success) {
+                    this.auctionDetail = result.data
+                    this.bidPrice = result.data.price + 10
+                    this.itemPrice = result.data.price
+                    this.history = result.data.auction_history
+
+                    this.connectWS()
+                } else {
+                    alert(result.error)
+                    window.location = '/'
+                }
+            },
+            userLogout: userLogout,
+            async placeBid() {
+                displayError()
+                if (this.wsConnection && this.readyToBid) {
+                    this.wsConnection.send(JSON.stringify({
+                        type: 'bid',
+                        price: this.bidPrice
+                    }))
+                } else {
+                    displayError('WS Connection is establishing')
+                }
+            },
+            async connectWS() {
+                let websocket = new WebSocket(
+                    (window.location.protocol === 'https:' ? 'wss://' : 'ws://') +
+                    window.location.host + '/api/ws/auction?id=' + this.auctionDetail.id);
+                websocket.onmessage = this.onMessage
+                this.wsConnection = websocket
+            },
+            async onMessage(event) {
+                console.log(event)
+                let message = JSON.parse(event.data)
+
+                switch (message.type) {
+                    case 'ready':
+                        this.readyToBid = true
+                        break
+
+                    case 'update':
+                        this.auctionDetail.price = message.data.bid_price
+                        this.itemPrice = message.data.bid_price
+                        console.log(this.history)
+                        this.history.push(message.data.history_record)
+                        break
+
+                    case 'error':
+                        displayError()
+                        displayError(message.message)
+                        break;
+                }
+            }
+        },
+
+        async mounted(){
+            let queries = window.location.search.substring(1).split("&")
+            let auctionId;
+            for (let query of queries) {
+                let kv = query.split('=')
+                if(kv.length >= 2 && kv[0] === 'id') {
+                    auctionId = kv[1]
+                    break
+                }
+            }
+            if (!auctionId) {
+                window.location = '/'
+            }
+            let { userLoggedIn, userInfo } = await fetchUserInfo()
+            this.userLoggedIn = userLoggedIn
+            this.userInfo = userInfo
+
+            this.fetchAuctionDetail(auctionId)
+        }
+    });
+</script>
+
+<style>
+.navbar{
+    padding: 0 100px;
+    font-size: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.listing-detail{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 35px;
+}
+.item-image{
+    border: solid 2px #ac9565;
+    padding: 10px;
+    margin-right: 80px;
+}
+.item-info{
+    display: flex;
+    flex-direction: column;
+}
+.item-info > *{
+    display: inline-block;
+}
+.price{
+    font-size: 22px;
+    margin: 10px 0;
+    color: #b09667;
+}
+.item-name{
+    margin: 0;
+}
+button.add-to-cart{
+    width: 150px;
+    height: 26px;
+    font-size: 18px;
+}
+input.amount-input{
+    font-family: "PT Serif", sans-serif;
+    border-radius: 0!important;
+    border: solid 2px #211916;
+    background: transparent;
+
+    transition: all 0.1s ease-in-out;
+    font-size: 16px;
+    max-width: 2em;
+}
+input.amount-input:focus,
+input.amount-input:active{
+    border: solid 2px #9d786c;
+}
+.field{
+    margin-bottom: 10px;
+}
+</style>

@@ -96,8 +96,7 @@
         el: '#app',
         data: {
             userLoggedIn: false,
-            userInfo: {},
-            listingDetail: {}
+            userInfo: {}
         },
 
         methods: {
@@ -118,7 +117,7 @@
                 formData.set('end_time', endTime.toISOString())
                 console.log(formData)
 
-                let resp = await fetch('/api/listings/add', {
+                let resp = await fetch('/api/auction/newAuction', {
                     method: 'POST',
                     body: formData
                 }).catch((error) => {
@@ -127,8 +126,10 @@
                 let error = 'Failed to Add'
                 let result = await resp.json();
                 if (result && result.success) {
-                    this.listingDetail = result.data
-                    error = null
+                    error = result.data.message
+                    setTimeout(() => {
+                        window.location = '/auction.html?id=' + result.data.auctionId
+                    }, 1500)
                 } else {
                     error = result.success || error
                 }

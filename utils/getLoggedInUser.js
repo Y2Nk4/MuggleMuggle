@@ -1,8 +1,8 @@
 module.exports = function (ctx) {
-    return async function () {
+    return async function (sendError = true) {
         let { session, service } = ctx
 
-        if (!session.userLogged) {
+        if (sendError && !session.userLogged) {
             ctx.error('You have not logged in yet', 403)
             return null
         }

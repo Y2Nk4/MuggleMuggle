@@ -71,7 +71,10 @@ module.exports = {
         })
 
         if (result.acknowledged) {
-            return ctx.success('Successfully Added')
+            return ctx.success({
+                listingId: result.insertedId,
+                message: 'Item has beenSuccessfully Added'
+            })
         } else {
             return ctx.error('Internal Error', 500)
         }

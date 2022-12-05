@@ -1,15 +1,18 @@
-# docker-compose.yml
-version: '3.1' #format version for this docker compose file
+version: "3.9"
 services:
-  mongo-container:
-    image: mongo:latest
-    #environment:
-        # - MONGO_INITDB_ROOT_USERNAME=root
-        # - MONGO_INITDB_ROOT_PASSWORD=MyPa$$w0rd
-        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        # Here you are setting the username and password
-        # so change it to whatever you want
-        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  mongo:
+    image: mongo:4.2.5
+
+  nginx:
+    build: ./nginx
     ports:
-      - "27017:27017"
-    command: mongod
+      - "80:80"
+      - "443:443"
+
+  web:
+    build: .
+    environment:
+      WAIT_HOSTS: mongo:27017
+      DB: mongo:27017
+    ports:
+      - "8080:8080"

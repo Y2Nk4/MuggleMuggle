@@ -4,9 +4,11 @@ const Loading = require('./controllers/Loading.js')
 //
 const auth = require('./controllers/auth')
 const user = require('./controllers/user')
+const auction = require('./controllers/auction')
 const shoppingcart = require('./controllers/shoppingcart')
 const listing = require('./controllers/listing')
 const router = new Router();
+const wsRouter = new Router();
 //
 
 router.post('/api/auth/login', auth.login)
@@ -28,4 +30,10 @@ router.get('/api/listings/detail', listing.getListingDetail)
 router.post('/api/listings/add', listing.addListing)
 router.post('/api/listings/edit', listing.editListing)
 
-module.exports = router
+router.get('/api/auctions/', auction.getAuctions)
+router.get('/api/auctions/detail', auction.getAuctionDetail)
+router.post('/api/auction/newAuction', auction.newAuction)
+
+wsRouter.get('/api/ws/auction', auction.wsJoinAuction)
+
+module.exports = { router, wsRouter }

@@ -117,6 +117,13 @@ button.flag-button:hover {
     background-size: contain;
 }
 
+button.flag-button.disabled{
+    cursor: not-allowed;
+    background: url(./images/flag-bg.png) no-repeat;
+    background-position-x: center;
+    background-size: contain;
+}
+
 div.warning-box{
     font-size: 13px;
     background: #000;
