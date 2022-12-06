@@ -9,11 +9,13 @@
 </head>
 <body>
     <div id="app">
-        <div class="web-header">
-            <div class="upper"></div>
-            <h2>MuggleMuggle Auction House</h2>
-            <div class="lower"></div>
-        </div>
+        <a href="/">
+            <div class="web-header">
+                <div class="upper"></div>
+                <h2>MuggleMuggle Auction House</h2>
+                <div class="lower"></div>
+            </div>
+        </a>
 
         <div class="navbar">
             <div>
@@ -29,7 +31,8 @@
             </div>
             <div v-else>
                 Welcome, {{ userInfo.firstname }} {{ userInfo.lastname }} |
-                <a href="/addListing.html">Add Listing</a> |
+                <a href="/addAuction.html">New Auction</a> |
+                <a href="/Profile.html">Account</a> |
                 <a href="/cart.html">Shopping Cart</a> |
                 <a @click="userLogout">Logout</a>
             </div>

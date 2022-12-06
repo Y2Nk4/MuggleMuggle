@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="./styles.css"/>
+    <link rel="stylesheet" type="text/css" href="./form.css"/>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=UnifrakturMaguntia|PT+Serif"/>
+    <title>MuggleMuggle Auction House</title>
+</head>
+<body>
+    <div id="app">
+        <a href="/">
+            <div class="web-header">
+                <div class="upper"></div>
+                <h2>MuggleMuggle Auction House</h2>
+                <div class="lower"></div>
+            </div>
+        </a>
+    
+        <div class="navbar">
+            <div>
+                <a href="/">All</a> |
+                <a href="/">Epic Deals</a> |
+                <a href="/">Best Seller</a> |
+                <a href="/">Back to Hogwarts</a>
+            </div>
+            <div v-if="!userLoggedIn">
+                <a href="/login.html">Sign In</a>
+                |
+                <a href="/signup.html">Sign Up</a>
+            </div>
+            <div v-else>
+                Welcome, {{ userInfo.firstname }} {{ userInfo.lastname }} |
+                <a href="/addListing.html">Add Listing</a> |
+                <a href="/addAuction.html">New Auction</a> |
+                <a href="/cart.html">Shopping Cart</a> |
+                <a @click="userLogout">Logout</a>
+            </div>
+        </div>
+    
+        <div>
+            <h3 class="sale-title title-font">Account</h3>
+            <p class="title-font" style="text-align: center;margin: 0">We Secured this site By Magic</p>
+        </div>
+    
+        <div>
+    
+            <div class="muggle-form-block">
+                <!-- Show User Information -->
+                <div class="muggle-form" id="user-profile">
+                    <div class="field">
+                        <p>First Name: {{ userInfo.firstname }}</p>
+                    </div>
+                    <div class="field">
+                        <p>Last Name: {{ userInfo.lastname }}</p>
+                    </div>
+                    <div class="field">
+                        <p>Email: {{ userInfo.email }}</p>
+                    </div>
+                    <div class="field">
+                        <button type="button" onclick="Form('change-profile-form')">Edit Profile</button>
+                    </div>
+                    <div class="field">
+                        <button type="button" onclick="Form('change-password-form')">Change Password</button>
+                    </div>
+                </div>
+                <!-- Edit User Information -->
+                <form style="display: none;" id="change-profile-form" class="muggle-form">
+                    <div class="warning-box" id="warning-box"></div>
+                    <div class="field">
+                        <label for="firstname">First Name: </label>
+                        <textarea type="text" id="firstname" name="firstname" cols="20" rows="1">{{ userInfo.firstname }}</textarea>
+                    </div>
+                    <div class="field">
+                        <label for="lastname">Last Name: </label>
+                        <textarea type="text" id="lastname" name="lastname" cols="20" rows="1">{{ userInfo.lastname }}</textarea>
+                    </div>
+                    <div class="field">
+                        <label for="email">Email: </label>
+                        <textarea type="text" id="email" name="email" cols="20" rows="1">{{ userInfo.email }}</textarea>
+                    </div>
+                    <div class="field">
+                        <button type="button" onclick="Form('change-profile-form')">Back</button>
+                    </div>
+                    <div class="field">
+                        <button type="button" onclick="ChangeProfile()">Done</button>
+                    </div>
+                </form>
+                <!-- Change User Password -->
+                <form style="display: none;" id="change-password-form" class="muggle-form">
+                    <div class="warning-box" id="warning-box"></div>
+                    <div class="field">
+                        <label class="PasswordText" for="password">Password: </label>
+                        <input type="password" id="password" name="password" placeholder="Enter Password"></input>
+                    </div>
+                    <div class="field">
+                        <label class="PasswordText" for="password">Confirm Password: </label>
+                        <input type="password" id="confirz`mPassword" name="confirmPassword" placeholder="Confirm Password">
+                    </div>
+                    <div class="field">
+                        <button type="button" onclick="Form('change-password-form')">Back</button>
+                    </div>
+                    <div class="field">
+                        <button type="button" onclick="ChangePassword()">Done</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script src="home.js"></script>
+<script src="common.js"></script>
+<script src="vue.min.js"></script>
+<script src="/controllers/user.js"></script>
+<script>
+function Form(form){
+    var x = document.getElementById("user-profile");
+    var y = document.getElementById(form)
+    if (x.style.display == "flex"){
+        x.style.display = "none";
+        y.style.display = "flex";
+    }
+    else{
+        x.style.display = "flex";
+        y.style.display = "none";
+    }
+}
+var app = new Vue({
+        el: '#app',
+        data: {
+            userLoggedIn: false,
+            userInfo: {}
+        },
+        async mounted(){
+            let { userLoggedIn, userInfo } = await fetchUserInfo()
+            this.userLoggedIn = userLoggedIn
+            this.userInfo = userInfo
+            this.fetchListings()
+        }
+    });
+</script>
+
+<style>
+    .navbar{
+        padding: 0 100px;
+        font-size: 20px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+</style>
