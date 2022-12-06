@@ -13,7 +13,7 @@ module.exports = {
     async getAuctions(ctx) {
         const { service } = ctx
 
-        let auctions = await service.db.collection('auction').find({}).toArray()
+        let auctions = await service.db.collection('auction').find({}).sort({added_at: -1}).toArray()
         console.log(auctions)
 
         return ctx.success(auctions)
@@ -83,7 +83,8 @@ module.exports = {
             amount: parseInt(request.body.amount),
             image: storePath,
             removable: true,
-            ended: false
+            ended: false,
+            added_at: Date.now()
         })
 
         if (result.acknowledged) {
@@ -122,12 +123,10 @@ module.exports = {
             ctx.websocket.close()
             return
         }
-        console.log(user)
 
         let auction = await service.db.collection('auction').findOne({
             id: auctionId
         })
-        console.log(auction)
         if (!auction) {
             ctx.websocket.send(JSON.stringify({
                 type: 'error',
@@ -146,21 +145,17 @@ module.exports = {
             websocket: ctx.websocket
         })
 
-        console.log('send')
-
         ctx.websocket.send(JSON.stringify({
             type: 'ready',
             sessionId: sessionId,
             message: 'Auction Ready'
         }))
-        console.log('sent')
 
         ctx.websocket.on('close', () => {
             auctionConnections[auction.id] = auctionConnections[auction.id].filter((conn) => conn.sessionId !== sessionId)
         })
 
         ctx.websocket.on('message', async (data) => {
-            console.log('received', data)
             // do something with the message from client
             let message = null
             let error = null
@@ -236,6 +231,10 @@ module.exports = {
                                     type: 'update',
                                     data: {
                                         bid_price: bidPrice,
+                                        new_winner: {
+                                            name: bidUser,
+                                            user_id: user.id
+                                        },
                                         history_record: {
                                             bid_price: bidPrice,
                                             username: bidUser

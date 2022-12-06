@@ -198,6 +198,13 @@
                     case 'update':
                         this.auctionDetail.price = message.data.bid_price
                         this.itemPrice = message.data.bid_price
+
+                        if (message.data.new_winner.user_id === this.userInfo.id) {
+                            displayError('You are the winner now!')
+                        } else {
+                            displayError(`${message.data.new_winner.name} becomes the new winner now!`)
+                        }
+
                         this.bidPrice = message.data.bid_price + 10
                         console.log(this.history)
                         this.history.push(message.data.history_record)

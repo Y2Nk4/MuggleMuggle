@@ -41,7 +41,7 @@
 
         <div>
             <div class="muggle-form-block">
-                <form id="add-listing-form">
+                <form id="add-auction-form">
                     <div class="muggle-form add-listing">
 
                         <h4 class="form-title">Start a New Auction</h4>
@@ -103,7 +103,7 @@
 
         methods: {
             async submitAuction() {
-                let form = document.querySelector('#add-listing-form')
+                let form = document.querySelector('#add-auction-form')
                 const formData = new FormData(form)
                 let endTime = formData.get('end_date') + ' ' + formData.get('end_time')
                 console.log(endTime)

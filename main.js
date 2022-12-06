@@ -50,7 +50,7 @@ const dayjs = require('dayjs')
         }).toArray()
         let current = dayjs()
         let endedAuctions = []
-        for(let auction in auctions) {
+        for(let auction of auctions) {
             const endTime = dayjs(auction.end_time)
             if (!endTime.isValid() || endTime.isBefore(current)) {
                 endedAuctions.push(auction._id)
@@ -58,7 +58,7 @@ const dayjs = require('dayjs')
         }
         if (endedAuctions.length > 0) {
             const result = await db.collection('auction').update({
-                id: {
+                _id: {
                     $in: endedAuctions
                 }
             }, {
@@ -66,7 +66,7 @@ const dayjs = require('dayjs')
                     ended: true
                 }
             })
-            console.log('Auction Control, updated', result)
+            console.log('Auction Control, updated', endedAuctions)
             console.log(auctions.length - endedAuctions.length, 'auction ongoing')
         }
     }, 1000)

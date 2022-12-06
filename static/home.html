@@ -45,7 +45,7 @@
         <div class="listings">
             <div class="items" v-for="item in listings">
                 <a :href="'/listing.html?item=' + item._id">
-                    <div><img :src="item.image" alt=""></div>
+                    <div style="height: 200px; width: 200px"><img :src="item.image" alt=""></div>
                     <div>
                         <div class="item-type">
                             <h3>{{ item.name }}</h3>
@@ -63,6 +63,23 @@
         <div>
             <h3 class="sale-title title-font">Auctions</h3>
         </div>
+        <div class="listings">
+            <div class="items" v-for="item in auctions">
+                <a :href="'/auction.html?id=' + item.id">
+                    <div style="height: 200px; width: 200px"><img :src="item.image" alt=""></div>
+                    <div>
+                        <div class="item-type">
+                            <h3>{{ item.name }}</h3>
+                        </div>
+                        <span style="display: inline-block">$ {{ item.price }}</span>
+                        <span style="display: inline-block">End at {{ item.end_time }}</span>
+                        <p>
+                            {{ item.description }}
+                        </p>
+                    </div>
+                </a>
+            </div>
+        </div>
     </div>
 </body>
 </html>
@@ -70,13 +87,52 @@
 <script src="home.js"></script>
 <script src="common.js"></script>
 <script src="vue.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/updateLocale.js"></script>
 <script>
+    dayjs.extend(window.dayjs_plugin_relativeTime, {
+        thresholds: [
+            { l: 's', r: 1 },
+            { l: 'm', r: 1 },
+            { l: 'mm', r: 59, d: 'minute' },
+            { l: 'h', r: 1 },
+            { l: 'hh', r: 23, d: 'hour' },
+            { l: 'd', r: 1 },
+            { l: 'dd', r: 29, d: 'day' },
+            { l: 'M', r: 1 },
+            { l: 'MM', r: 11, d: 'month' },
+            { l: 'y' },
+            { l: 'yy', d: 'year' }
+        ]
+    })
+    dayjs.extend(window.dayjs_plugin_updateLocale)
+    dayjs.updateLocale('en', {
+        relativeTime: {
+            future: "Only %s Left",
+            past: "Ended %s Ago",
+            s: '%d seconds',
+            ss: '%d seconds',
+            m: "%d minute",
+            mm: "%d minutes",
+            h: "%d hour",
+            hh: "%d hours",
+            d: "%d day",
+            dd: "%d days",
+            M: "%d month",
+            MM: "%d months",
+            y: "%d year",
+            yy: "%d years"
+        }
+    })
+
     var app = new Vue({
         el: '#app',
         data: {
             userLoggedIn: false,
             userInfo: {},
-            listings: []
+            listings: [],
+            auctions: []
         },
 
         methods: {
@@ -89,6 +145,17 @@
                 let result = await resp.json();
                 if (result && result.success) {
                     this.listings = result.data
+                }
+            },
+            async fetchAuctions() {
+                let resp = await fetch('/api/auctions/', {
+                    method: 'GET'
+                }).catch((error) => {
+                    console.log(error)
+                })
+                let result = await resp.json();
+                if (result && result.success) {
+                    this.auctions = result.data
                 }
             },
             async userLogout() {
@@ -107,6 +174,7 @@
             this.userLoggedIn = userLoggedIn
             this.userInfo = userInfo
             this.fetchListings()
+            this.fetchAuctions()
         }
     });
 </script>

@@ -44,64 +44,72 @@
         </div>
     
         <div>
-    
+            <div class="warning-box" id="warning-box" style="width: 365px;margin: 15px auto 0;"></div>
             <div class="muggle-form-block">
                 <!-- Show User Information -->
-                <div class="muggle-form" id="user-profile">
+                <div class="muggle-form" id="user-profile" v-if="displayForm === 0">
                     <div class="field">
-                        <p>First Name: {{ userInfo.firstname }}</p>
+                        <p style="margin: 0">First Name: {{ userInfo.firstname }}</p>
                     </div>
                     <div class="field">
-                        <p>Last Name: {{ userInfo.lastname }}</p>
+                        <p style="margin: 0">Last Name: {{ userInfo.lastname }}</p>
                     </div>
                     <div class="field">
-                        <p>Email: {{ userInfo.email }}</p>
+                        <p style="margin: 0">Email: {{ userInfo.email }}</p>
                     </div>
                     <div class="field">
-                        <button type="button" onclick="Form('change-profile-form')">Edit Profile</button>
+                        <button type="button" @click="displayForm = 1">Edit Profile</button>
                     </div>
                     <div class="field">
-                        <button type="button" onclick="Form('change-password-form')">Change Password</button>
+                        <button type="button" @click="displayForm = 2">Change Password</button>
                     </div>
                 </div>
                 <!-- Edit User Information -->
-                <form style="display: none;" id="change-profile-form" class="muggle-form">
-                    <div class="warning-box" id="warning-box"></div>
+                <form id="change-profile-form" class="muggle-form" v-if="displayForm === 1">
                     <div class="field">
                         <label for="firstname">First Name: </label>
-                        <textarea type="text" id="firstname" name="firstname" cols="20" rows="1">{{ userInfo.firstname }}</textarea>
+                        <input type="text" id="firstname" name="firstname" v-model="userInfo.firstname">
                     </div>
                     <div class="field">
                         <label for="lastname">Last Name: </label>
-                        <textarea type="text" id="lastname" name="lastname" cols="20" rows="1">{{ userInfo.lastname }}</textarea>
+                        <input type="text" id="lastname" name="lastname" v-model="userInfo.lastname">
                     </div>
                     <div class="field">
                         <label for="email">Email: </label>
-                        <textarea type="text" id="email" name="email" cols="20" rows="1">{{ userInfo.email }}</textarea>
+                        <input type="text" id="email" name="email" v-model="userInfo.email">
                     </div>
                     <div class="field">
-                        <button type="button" onclick="Form('change-profile-form')">Back</button>
+                        <button type="button" @click="displayForm = 0">Back</button>
                     </div>
                     <div class="field">
-                        <button type="button" onclick="ChangeProfile()">Done</button>
+                        <button type="button" @click="updateProfile">Done</button>
                     </div>
                 </form>
                 <!-- Change User Password -->
-                <form style="display: none;" id="change-password-form" class="muggle-form">
-                    <div class="warning-box" id="warning-box"></div>
+                <form id="change-password-form" class="muggle-form" v-if="displayForm === 2">
                     <div class="field">
                         <label class="PasswordText" for="password">Password: </label>
-                        <input type="password" id="password" name="password" placeholder="Enter Password"></input>
+                        <input type="password"
+                               id="password"
+                               name="password"
+                               placeholder="Enter Password"
+                               v-model="changePass.password"
+                        >
                     </div>
                     <div class="field">
-                        <label class="PasswordText" for="password">Confirm Password: </label>
-                        <input type="password" id="confirz`mPassword" name="confirmPassword" placeholder="Confirm Password">
+                        <label class="PasswordText" for="password" >Confirm Password: </label>
+                        <input type="password"
+                               id="confirmPassword"
+                               name="confirmPassword"
+                               placeholder="Confirm Password"
+                               v-model="changePass.confirmPassword"
+                        >
                     </div>
                     <div class="field">
-                        <button type="button" onclick="Form('change-password-form')">Back</button>
+                        <button type="button" @click="displayForm = 0">Back</button>
                     </div>
                     <div class="field">
-                        <button type="button" onclick="ChangePassword()">Done</button>
+                        <button type="button" @click="changePassword">Done</button>
                     </div>
                 </form>
             </div>
@@ -115,29 +123,71 @@
 <script src="vue.min.js"></script>
 <script src="/controllers/user.js"></script>
 <script>
-function Form(form){
-    var x = document.getElementById("user-profile");
-    var y = document.getElementById(form)
-    if (x.style.display == "flex"){
-        x.style.display = "none";
-        y.style.display = "flex";
-    }
-    else{
-        x.style.display = "flex";
-        y.style.display = "none";
-    }
-}
 var app = new Vue({
         el: '#app',
         data: {
             userLoggedIn: false,
+            displayForm: 0,
+            changePass: {},
             userInfo: {}
+        },
+        methods: {
+            async changePassword() {
+                if (!this.changePass.password || !this.changePass.confirmPassword ||
+                    this.changePass.password !== this.changePass.confirmPassword) {
+                    return displayError('New password does not match with the confirm password')
+                }
+                let formData = new FormData()
+                formData.set('password', this.changePass.password)
+                formData.set('confirmPassword', this.changePass.confirmPassword)
+
+                let resp = await fetch('/api/user/changePassword', {
+                    method: 'POST',
+                    body: formData
+                }).catch((error) => {
+                    displayError('Failed to Update: ' + error.message)
+                })
+                let result = await resp.json()
+                if (result && result.success) {
+                    displayError(result.data)
+                    let { userLoggedIn, userInfo } = await fetchUserInfo()
+                    this.userLoggedIn = userLoggedIn
+                    this.userInfo = userInfo
+
+                    this.displayForm = 0
+                    this.changePass = {}
+                } else {
+                    displayError(result.message)
+                }
+            },
+            async updateProfile() {
+                let formData = new FormData()
+                if(this.userInfo.email) formData.set('email', this.userInfo.email)
+                if(this.userInfo.firstname) formData.set('firstname', this.userInfo.firstname)
+                if(this.userInfo.lastname) formData.set('lastname', this.userInfo.lastname)
+
+                let resp = await fetch('/api/user/userUpdateInfo', {
+                    method: 'POST',
+                    body: formData
+                }).catch((error) => {
+                    displayError('Failed to Update: ' + error.message)
+                })
+                let result = await resp.json()
+                if (result && result.success) {
+                    displayError('Successfully updated')
+                    let { userLoggedIn, userInfo } = await fetchUserInfo()
+                    this.userLoggedIn = userLoggedIn
+                    this.userInfo = userInfo
+                    this.displayForm = 0
+                } else {
+                    displayError(result.message)
+                }
+            }
         },
         async mounted(){
             let { userLoggedIn, userInfo } = await fetchUserInfo()
             this.userLoggedIn = userLoggedIn
             this.userInfo = userInfo
-            this.fetchListings()
         }
     });
 </script>

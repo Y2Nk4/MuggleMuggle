@@ -8,7 +8,7 @@ module.exports = {
     async getListings(ctx) {
         const { service } = ctx
 
-        let listings = await service.db.collection('listings').find({}).toArray()
+        let listings = await service.db.collection('listings').find({}).sort({added_at: -1}).toArray()
         console.log(listings)
 
         return ctx.success(listings)
@@ -67,7 +67,8 @@ module.exports = {
             description: htmlEscape(request.body.description),
             price: Number(request.body.price),
             amount: parseInt(request.body.amount),
-            image: storePath
+            image: storePath,
+            added_at: Date.now()
         })
 
         if (result.acknowledged) {
