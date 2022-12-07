@@ -45,7 +45,7 @@
             <div class="warning-box" id="warning-box" style="margin: 10px 100px;"></div>
 
             <div class="cart-item" v-for="cartItem in shoppingCartItems">
-                <img :src="cartItem.item.image" alt="">
+                <img style="height: 200px; width: 200px" :src="cartItem.item.image" alt="">
                 <div style="margin-left: 80px; width: 100%">
                     <a :href="'/listing.html?item=' + cartItem.item_id">
                         <h2>{{ cartItem.item.name }}</h2>
