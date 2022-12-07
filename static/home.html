@@ -38,10 +38,10 @@
                 <a @click="userLogout">Logout</a>
             </div>
         </div>
-        <div style="display: flex;  margin-bottom: -100px; padding-left: 380px; background: #f3ece2" class="animation">
+        <div style="display:inline-block;float: left;position: relative;right:-250px;" class="animation">
             <img style=" width: 100px; height: 100px" src="https://www.animatedimages.org/data/media/82/animated-witch-image-0104.gif">
         </div>
-        <div style="display: flex;  margin-bottom: -100px; padding-left: 940px;" class="animation">
+        <div style="display:inline-block;float: right;position: relative;left:-250px;" class="animation">
             <img style=" width: 100px; height: 100px;" src="https://www.animatedimages.org/data/media/82/animated-witch-image-0104.gif">
         </div>
         <div>
@@ -51,13 +51,13 @@
         <div class="listings">
             <div class="items" v-for="item in listings">
                 <a :href="'/listing.html?item=' + item._id">
-                    <div style="height: 200px; width: 200px"><img style="width: 100%;max-height: 100%" :src="item.image" alt=""></div>
+                    <div style="height: 200px; width: 200px"><img style="width:190px;height:190px;display:flex;margin-left:auto;margin-right:auto;margin-top:2%" :src="item.image" alt=""></div>
                     <div>
                         <div class="item-type">
                             <h3>{{ item.name }}</h3>
                         </div>
                         <span>$ {{ item.price }}</span>
-                        <p>
+                        <p class="item-description">
                             {{ item.description }}
                         </p>
                     </div>
@@ -65,10 +65,10 @@
             </div>
         </div>
 
-        <div style="display: flex;  margin-bottom: -100px; padding-left: 380px; background: #f3ece2" class="animation">
+        <div style="display:inline-block;float: left;position: relative;right:-250px;" class="animation">
             <img style=" width: 100px; height: 100px" src="https://www.animatedimages.org/data/media/82/animated-witch-image-0104.gif">
         </div>
-        <div style="display: flex;  margin-bottom: -100px; padding-left: 940px;" class="animation">
+        <div style="display:inline-block;float: right;position: relative;left:-250px;" class="animation">
             <img style=" width: 100px; height: 100px;" src="https://www.animatedimages.org/data/media/82/animated-witch-image-0104.gif">
         </div>
         <div>
@@ -77,14 +77,14 @@
         <div class="listings">
             <div class="items" v-for="item in auctions">
                 <a :href="'/auction.html?id=' + item.id">
-                    <div style="height: 200px; width: 200px"><img :src="item.image" alt=""></div>
+                    <div style="height: 200px; width: 200px"><img :src="item.image" style="width:190px;height:190px;display:flex;margin-left:auto;margin-right:auto;margin-top:2%" alt=""></div>
                     <div>
                         <div class="item-type">
                             <h3>{{ item.name }}</h3>
                         </div>
                         <span style="display: inline-block">$ {{ item.price }}</span>
                         <span style="display: inline-block">End at {{ item.end_time }}</span>
-                        <p>
+                        <p class="item-description">
                             {{ item.description }}
                         </p>
                     </div>
