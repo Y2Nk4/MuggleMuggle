@@ -1,6 +1,4 @@
-const Router = require('@koa/router');
-// Add to Loading.js (Function to load html and css)
-const Loading = require('./controllers/Loading.js')
+const Router = require('@koa/router')
 //
 const auth = require('./controllers/auth')
 const user = require('./controllers/user')
