@@ -46,11 +46,11 @@
                 <img :src="listingDetail.image" alt="">
             </div>
             <div class="item-info">
-                <h3 class="item-name">{{ listingDetail.name }}</h3>
+                <h3 class="item-name" v-html="listingDetail.name"></h3>
                 <span class="price">$ {{ listingDetail.price }}</span>
                 <span v-if="listingDetail.amount > 0">Only {{ listingDetail.amount }} left</span>
                 <span v-else style="color: red">Sold Out</span>
-                <p>{{ listingDetail.description }}</p>
+                <p v-html="listingDetail.description"></p>
 
                 <div class="field">
                     <label for="amount">Amount:</label>

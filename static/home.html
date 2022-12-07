@@ -54,12 +54,10 @@
                     <div style="height: 200px; width: 200px"><img style="width:190px;height:190px;display:flex;margin-left:auto;margin-right:auto;margin-top:2%" :src="item.image" alt=""></div>
                     <div>
                         <div class="item-type">
-                            <h3>{{ item.name }}</h3>
+                            <h3 v-html="item.name"></h3>
                         </div>
                         <span>$ {{ item.price }}</span>
-                        <p class="item-description">
-                            {{ item.description }}
-                        </p>
+                        <p class="item-description" v-html="item.description"></p>
                     </div>
                 </a>
             </div>
@@ -80,13 +78,11 @@
                     <div style="height: 200px; width: 200px"><img :src="item.image" style="width:190px;height:190px;display:flex;margin-left:auto;margin-right:auto;margin-top:2%" alt=""></div>
                     <div>
                         <div class="item-type">
-                            <h3>{{ item.name }}</h3>
+                            <h3 v-html="item.name"></h3>
                         </div>
                         <span style="display: inline-block">$ {{ item.price }}</span>
                         <span style="display: inline-block">End at {{ item.end_time }}</span>
-                        <p class="item-description">
-                            {{ item.description }}
-                        </p>
+                        <p class="item-description" v-html="item.description"></p>
                     </div>
                 </a>
             </div>

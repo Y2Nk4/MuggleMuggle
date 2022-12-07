@@ -50,11 +50,11 @@
                 <img :src="auctionDetail.image" alt="">
             </div>
             <div class="item-info">
-                <h3 class="item-name">{{ auctionDetail.name }}</h3>
+                <h3 class="item-name" v-html="auctionDetail.name"></h3>
                 <span class="price">$ {{ itemPrice }}</span>
                 <span>{{ timeLeft }}</span>
                 <span>(End at {{auctionDetail.end_time_text}})</span>
-                <p>{{ auctionDetail.description }}</p>
+                <p v-html="auctionDetail.description"></p>
 
                 <div class="field">
                     <label for="bid_price">Bid:</label>
