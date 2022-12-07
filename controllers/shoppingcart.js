@@ -56,13 +56,19 @@ const shoppingCart = {
             !request.body.hasOwnProperty('amount') ||
             isNaN(Number(request.body.amount))
         ) {
-            return ctx.error('Missing Parameters', 403)
+            return ctx.error('Missing Parameters', 400)
+        }
+        let amount = parseInt(request.body.amount)
+        if (amount <= 0) {
+            return ctx.error('Amount cannot be less than or equal to 0', 400)
         }
         // check user session
         if (!session.userLogged) {
             return ctx.error('You have not logged in yet', 403)
         }
         const userId = session.userId
+
+
 
         // check item
         let itemId;
@@ -88,9 +94,8 @@ const shoppingCart = {
             item_id: itemId,
             user_id: userId
         })
-        let amount = 0
         if (cartItem) {
-            amount = Math.min(Number(request.body.amount) + cartItem.amount, item.amount)
+            amount = Math.min(amount + cartItem.amount, item.amount)
             let cartItemPrice = Math.ceil(item.price * amount * 100) / 100
             await service.db.collection('cart').updateOne({
                 _id: cartItem._id
