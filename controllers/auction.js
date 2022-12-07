@@ -187,7 +187,7 @@ module.exports = {
                             }))
                             return
                         }
-                        let bidPrice = Number(message.price)
+                        let bidPrice = Math.ceil(Number(message.price) * 100) / 100
                         if (isNaN(bidPrice) || auctionPrice[auctionId] >= bidPrice) {
                             ctx.websocket.send(JSON.stringify({
                                 type: 'error',
