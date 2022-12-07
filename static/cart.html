@@ -159,7 +159,7 @@
                     await this.fetchShoppingCart()
 
                     if (result && result.success) {
-                        displayError('Checkout Successfully, <a href="/history.html" target="_blank">View History</a>')
+                        displayError('Checkout Successfully, <a href="/history.html" target="_blank" style="color: white">View History</a>')
                     } else {
                         displayError(result.error || 'Failed to Checkout')
                     }
