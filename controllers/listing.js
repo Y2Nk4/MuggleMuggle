@@ -55,6 +55,14 @@ module.exports = {
             return ctx.error('Missing Parameters', 400)
         }
 
+        if (Number(request.body.amount) <= 0) {
+            return ctx.error('Amount cannot less than 1', 400)
+        }
+        const price = Math.ceil(Number(request.body.price) * 100) / 100
+        if (price <= 0) {
+            return ctx.error('Price cannot less than or equal to 0', 400)
+        }
+
         let user = await service.getLoggedInUser()
         if (!user) return
 
@@ -67,7 +75,7 @@ module.exports = {
             user_id: user.id,
             name: htmlEscape(request.body.name),
             description: htmlEscape(request.body.description),
-            price: Number(request.body.price),
+            price,
             amount: parseInt(request.body.amount),
             image: storePath,
             added_at: Date.now()
