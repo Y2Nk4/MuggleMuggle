@@ -56,7 +56,7 @@
                 <img style="height: 200px; width: 200px" :src="cartItem.item.image" alt="">
                 <div style="margin-left: 80px; width: 100%">
                     <a :href="'/listing.html?item=' + cartItem.item_id">
-                        <h2>{{ cartItem.item.name }}</h2>
+                        <h2 v-html="cartItem.item.name"></h2>
                     </a>
 
                     <div class="field" style="margin: 20px 0">
