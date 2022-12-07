@@ -13,7 +13,9 @@ module.exports = {
     async getAuctions(ctx) {
         const { service } = ctx
 
-        let auctions = await service.db.collection('auction').find({}).sort({added_at: -1}).toArray()
+        let auctions = await service.db.collection('auction').find({
+            ended: false
+        }).sort({added_at: -1}).toArray()
         console.log(auctions)
 
         return ctx.success(auctions)
