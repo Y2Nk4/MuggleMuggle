@@ -23,77 +23,53 @@
                 <a href="/">Best Seller</a> |
                 <a href="/">Back to Hogwarts</a>
             </div>
-            <div v-if="!userLoggedIn">
-                <a href="/login.html">Sign In</a>
-                |
-                <a href="/signup.html">Sign Up</a>
-            </div>
-            <div v-else>
+            <div >
                 Welcome, {{ userInfo.firstname }} {{ userInfo.lastname }} |
                 <a href="/addListing.html">Add Listing</a> |
                 <a href="/addAuction.html">New Auction</a> |
                 <a href="/Profile.html">Account</a> |
-                <a href="/history.html">History</a> |
                 <a href="/cart.html">Shopping Cart</a> |
                 <a @click="userLogout">Logout</a>
             </div>
         </div>
-        <div style="display: flex;  margin-bottom: -100px; padding-left: 380px; background: #f3ece2" class="animation">
-            <img style=" width: 100px; height: 100px" src="https://www.animatedimages.org/data/media/82/animated-witch-image-0104.gif">
-        </div>
-        <div style="display: flex;  margin-bottom: -100px; padding-left: 940px;" class="animation">
-            <img style=" width: 100px; height: 100px;" src="https://www.animatedimages.org/data/media/82/animated-witch-image-0104.gif">
-        </div>
+
         <div>
-            <h3 class="sale-title title-font">Marketplace</h3>
+            <h3 class="sale-title title-font">Purchases</h3>
         </div>
 
         <div class="listings">
-            <div class="items" v-for="item in listings">
-                <a :href="'/listing.html?item=' + item._id">
-                    <div style="height: 200px; width: 200px"><img style="width: 100%;max-height: 100%" :src="item.image" alt=""></div>
-                    <div>
-                        <div class="item-type">
-                            <h3>{{ item.name }}</h3>
-                        </div>
-                        <span>$ {{ item.price }}</span>
-                        <p>
-                            {{ item.description }}
-                        </p>
+            <div class="items" v-for="item in purchaseRecord">
+                <div style="height: 200px; width: 200px"><img style="width: 100%" :src="item.image" alt=""></div>
+                <div style="width: 100%; text-align: center;">
+                    <div class="item-type">
+                        <h3>{{ item.name }}</h3>
                     </div>
-                </a>
+                    <span style="display: block">Amount: $ {{ item.amount }}</span>
+                    <span style="display: block">Total: $ {{ item.price }}</span>
+                </div>
             </div>
         </div>
 
-        <div style="display: flex;  margin-bottom: -100px; padding-left: 380px; background: #f3ece2" class="animation">
-            <img style=" width: 100px; height: 100px" src="https://www.animatedimages.org/data/media/82/animated-witch-image-0104.gif">
-        </div>
-        <div style="display: flex;  margin-bottom: -100px; padding-left: 940px;" class="animation">
-            <img style=" width: 100px; height: 100px;" src="https://www.animatedimages.org/data/media/82/animated-witch-image-0104.gif">
-        </div>
+
         <div>
-            <h3 class="sale-title title-font">Auctions</h3>
+            <h3 class="sale-title title-font">Sold</h3>
         </div>
         <div class="listings">
-            <div class="items" v-for="item in auctions">
-                <a :href="'/auction.html?id=' + item.id">
-                    <div style="height: 200px; width: 200px"><img :src="item.image" alt=""></div>
-                    <div>
-                        <div class="item-type">
-                            <h3>{{ item.name }}</h3>
-                        </div>
-                        <span style="display: inline-block">$ {{ item.price }}</span>
-                        <span style="display: inline-block">End at {{ item.end_time }}</span>
-                        <p>
-                            {{ item.description }}
-                        </p>
+            <div class="items" v-for="item in sellingRecord">
+                <div style="height: 200px; width: 200px"><img :src="item.image" alt=""></div>
+                <div style="width: 100%; text-align: center;">
+                    <div class="item-type">
+                        <h3>{{ item.name }}</h3>
                     </div>
-                </a>
+                    <span style="display: block">Amount: $ {{ item.amount }}</span>
+                    <span style="display: block">Total: $ {{ item.price }}</span>
+                </div>
             </div>
         </div>
     </div>
 </body>
 </html>
+
 
 <script src="home.js"></script>
 <script src="common.js"></script>
@@ -142,31 +118,32 @@
         data: {
             userLoggedIn: false,
             userInfo: {},
-            listings: [],
+            sellingRecord: [],
+            purchaseRecord: [],
             auctions: []
         },
 
         methods: {
-            async fetchListings() {
-                let resp = await fetch('/api/listings/', {
+            async fetchSellingRecord() {
+                let resp = await fetch('/api/user/sellingRecord', {
                     method: 'GET'
                 }).catch((error) => {
                     console.log(error)
                 })
                 let result = await resp.json();
                 if (result && result.success) {
-                    this.listings = result.data
+                    this.sellingRecord = result.data
                 }
             },
-            async fetchAuctions() {
-                let resp = await fetch('/api/auctions/', {
+            async fetchPurchaseRecord() {
+                let resp = await fetch('/api/user/purchaseRecord', {
                     method: 'GET'
                 }).catch((error) => {
                     console.log(error)
                 })
                 let result = await resp.json();
                 if (result && result.success) {
-                    this.auctions = result.data
+                    this.purchaseRecord = result.data
                 }
             },
             async userLogout() {
@@ -184,8 +161,8 @@
             let { userLoggedIn, userInfo } = await fetchUserInfo()
             this.userLoggedIn = userLoggedIn
             this.userInfo = userInfo
-            this.fetchListings()
-            this.fetchAuctions()
+            this.fetchSellingRecord()
+            this.fetchPurchaseRecord()
         }
     });
 </script>

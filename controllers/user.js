@@ -87,6 +87,32 @@ const userController = {
 
     _formatUserJSON(user) {
         return Object.assign(user, {_id: undefined, password: undefined})
+    },
+
+    async getPurchaseHistory(ctx) {
+        const { service } = ctx
+
+        let user = await service.getLoggedInUser()
+        if (!user) return
+
+        let records = await service.db.collection('sell_record').find({
+            buyer_id: user.id
+        }).sort({purchase_time: -1}).toArray()
+
+        return ctx.success(records)
+    },
+
+    async getSellingRecord(ctx) {
+        const { service } = ctx
+
+        let user = await service.getLoggedInUser()
+        if (!user) return
+
+        let records = await service.db.collection('sell_record').find({
+            seller_id: user.id
+        }).sort({purchase_time: -1}).toArray()
+
+        return ctx.success(records)
     }
 }
 

@@ -8,7 +8,9 @@ module.exports = {
     async getListings(ctx) {
         const { service } = ctx
 
-        let listings = await service.db.collection('listings').find({}).sort({added_at: -1}).toArray()
+        let listings = await service.db.collection('listings').find({
+            amount: { '$gt': 0 }
+        }).sort({added_at: -1}).toArray()
         console.log(listings)
 
         return ctx.success(listings)

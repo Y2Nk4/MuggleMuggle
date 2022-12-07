@@ -33,6 +33,7 @@
                 <a href="/addListing.html">Add Listing</a> |
                 <a href="/addAuction.html">New Auction</a> |
                 <a href="/Profile.html">Account</a> |
+                <a href="/history.html">History</a> |
                 <a href="/cart.html">Shopping Cart</a> |
                 <a @click="userLogout">Logout</a>
             </div>
@@ -47,7 +48,8 @@
             <div class="item-info">
                 <h3 class="item-name">{{ listingDetail.name }}</h3>
                 <span class="price">$ {{ listingDetail.price }}</span>
-                <span>Only {{ listingDetail.amount }} left</span>
+                <span v-if="listingDetail.amount > 0">Only {{ listingDetail.amount }} left</span>
+                <span v-else style="color: red">Sold Out</span>
                 <p>{{ listingDetail.description }}</p>
 
                 <div class="field">
