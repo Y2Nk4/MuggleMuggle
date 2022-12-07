@@ -64,6 +64,10 @@
                     <h3 style="white-space: nowrap;">$ {{ cartItem.total_price }}</h3>
                 </div>
             </div>
+
+            <div style="text-align: center">
+                <button :class="`flag-button ` + (disableCheckout ? 'disabled' : '')" type="button" @click="checkout" :disabled="disableCheckout">Checkout</button>
+            </div>
         </div>
     </div>
 </body>
@@ -77,6 +81,7 @@
         el: '#app',
         data: {
             userLoggedIn: false,
+            disableCheckout: false,
             userInfo: {},
             shoppingCartItems: []
         },
@@ -91,6 +96,7 @@
                 let result = await resp.json();
                 if (result && result.success) {
                     this.shoppingCartItems = result.data
+                    this.disableCheckout = this.shoppingCartItems.length === 0
                 }
             },
             async userLogout() {
@@ -132,6 +138,26 @@
 
                 displayError('Successfully removed')
                 await this.fetchShoppingCart()
+            },
+
+            async checkout() {
+                if(!this.disableCheckout) {
+                    this.disableCheckout = true
+                    let resp = await fetch('/api/shoppingCart/checkout', {
+                        method: 'POST'
+                    }).catch((error) => {
+                        console.log(error)
+                    })
+                    let result = await resp.json()
+                    await this.fetchShoppingCart()
+
+                    if (result && result.success) {
+                        displayError('Checkout Successfully, <a href="/history.html" target="_blank">View History</a>')
+                    } else {
+                        displayError(result.error || 'Failed to Checkout')
+                    }
+                    this.disableCheckout = false
+                }
             }
         },
 

@@ -77,6 +77,12 @@ const shoppingCart = {
         if (!item) {
             return ctx.error('Item not exists.', 403)
         }
+        if (item.user_id === userId) {
+            return ctx.error('You cannot add the item you sell to your cart.', 403)
+        }
+        if (item.amount <= 0) {
+            return ctx.error('Item has been sold out', 200)
+        }
 
         let cartItem = await service.db.collection('cart').findOne({
             item_id: itemId,
@@ -183,6 +189,58 @@ const shoppingCart = {
         })
 
         return ctx.success('Successfully Edit')
+    },
+
+    async checkout(ctx) {
+        const { service } = ctx
+
+        let user = await service.getLoggedInUser()
+        if (!user) return
+
+        let cartItems = await service.db.collection('cart').find({
+            user_id: user.id
+        }).toArray()
+        let listings = await service.db.collection('listings').find({
+            _id: {
+                '$in': cartItems.map((item) => item.item_id)
+            }
+        }).toArray()
+        let listingMap = {}
+        for(let listing of listings) {
+            listingMap[listing._id] = listing
+        }
+        for(let cartItem of cartItems) {
+            let listing = listingMap[cartItem.item_id]
+            if (!listing.soldout && listing.amount > 0) {
+                let amount = Math.min(cartItem.amount, listing.amount)
+
+                let price = Math.ceil(amount * listing.price * 100) / 100
+
+                await service.db.collection('listings').updateOne({
+                    _id: listing._id
+                }, {
+                    '$set': {
+                        amount: listing.amount - amount,
+                        soldout: (listing.amount - amount) === 0
+                    }
+                })
+                await service.db.collection('sell_record').insertOne({
+                    buyer_id: user.id,
+                    seller_id: listing.user_id,
+                    amount,
+                    listing_id: listing._id,
+                    price,
+                    name: listing.name,
+                    image: listing.image,
+                    purchase_time: Date.now()
+                })
+                await service.db.collection('cart').deleteOne({
+                    _id: cartItem._id
+                })
+            }
+        }
+
+        return ctx.success()
     }
 }
 

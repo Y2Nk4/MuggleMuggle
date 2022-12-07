@@ -38,36 +38,31 @@
         </div>
 
         <div class="listings">
-            <div class="items" v-for="item in listings">
+            <div class="items" v-for="item in purchaseRecord">
                 <div style="height: 200px; width: 200px"><img style="width: 100%" :src="item.image" alt=""></div>
-                <div>
+                <div style="width: 100%; text-align: center;">
                     <div class="item-type">
                         <h3>{{ item.name }}</h3>
                     </div>
-                    <span>$ {{ item.price }}</span>
-                    <p>
-                        {{ item.description }}
-                    </p>
+                    <span style="display: block">Amount: $ {{ item.amount }}</span>
+                    <span style="display: block">Total: $ {{ item.price }}</span>
                 </div>
             </div>
         </div>
 
 
         <div>
-            <h3 class="sale-title title-font">Sales</h3>
+            <h3 class="sale-title title-font">Sold</h3>
         </div>
         <div class="listings">
-            <div class="items" v-for="item in auctions">
+            <div class="items" v-for="item in sellingRecord">
                 <div style="height: 200px; width: 200px"><img :src="item.image" alt=""></div>
-                <div>
+                <div style="width: 100%; text-align: center;">
                     <div class="item-type">
                         <h3>{{ item.name }}</h3>
                     </div>
-                    <span style="display: inline-block">$ {{ item.price }}</span>
-                    <span style="display: inline-block">End at {{ item.end_time }}</span>
-                    <p>
-                        {{ item.description }}
-                    </p>
+                    <span style="display: block">Amount: $ {{ item.amount }}</span>
+                    <span style="display: block">Total: $ {{ item.price }}</span>
                 </div>
             </div>
         </div>
@@ -123,31 +118,32 @@
         data: {
             userLoggedIn: false,
             userInfo: {},
-            listings: [],
+            sellingRecord: [],
+            purchaseRecord: [],
             auctions: []
         },
 
         methods: {
-            async fetchListings() {
-                let resp = await fetch('/api/listings/', {
+            async fetchSellingRecord() {
+                let resp = await fetch('/api/user/sellingRecord', {
                     method: 'GET'
                 }).catch((error) => {
                     console.log(error)
                 })
                 let result = await resp.json();
                 if (result && result.success) {
-                    this.listings = result.data
+                    this.sellingRecord = result.data
                 }
             },
-            async fetchAuctions() {
-                let resp = await fetch('/api/auctions/', {
+            async fetchPurchaseRecord() {
+                let resp = await fetch('/api/user/purchaseRecord', {
                     method: 'GET'
                 }).catch((error) => {
                     console.log(error)
                 })
                 let result = await resp.json();
                 if (result && result.success) {
-                    this.auctions = result.data
+                    this.purchaseRecord = result.data
                 }
             },
             async userLogout() {
@@ -165,8 +161,8 @@
             let { userLoggedIn, userInfo } = await fetchUserInfo()
             this.userLoggedIn = userLoggedIn
             this.userInfo = userInfo
-            this.fetchListings()
-            this.fetchAuctions()
+            this.fetchSellingRecord()
+            this.fetchPurchaseRecord()
         }
     });
 </script>

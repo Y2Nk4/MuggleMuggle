@@ -46,7 +46,7 @@
         <div class="listings">
             <div class="items" v-for="item in listings">
                 <a :href="'/listing.html?item=' + item._id">
-                    <div style="height: 200px; width: 200px"><img style="width: 100%" :src="item.image" alt=""></div>
+                    <div style="height: 200px; width: 200px"><img style="width: 100%;max-height: 100%" :src="item.image" alt=""></div>
                     <div>
                         <div class="item-type">
                             <h3>{{ item.name }}</h3>
