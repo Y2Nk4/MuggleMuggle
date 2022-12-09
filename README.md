@@ -1,5 +1,14 @@
 <h1 style="text-align: center">Muggle Muggle</h1>
 
+### Grading Info
+Online Deployment: [MuggleMuggle.store](https://mugglemuggle.store/)
+
+#### Local Deploy
+Note: Local Deploy will use a **Self-Signed** SSL Certificate for HTTPS traffic
+```shell
+docker-compose up
+```
+
 ### Project Set-Up
 1. Clone the Proect
 2. Run `npm install` in the terminal to install packages.
